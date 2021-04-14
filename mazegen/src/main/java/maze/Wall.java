@@ -5,7 +5,7 @@ public class Wall {
     public static final int SOUTH = 2;
     public static final int EAST = 1;
     public static final int WEST = 3;
-    public static final int NUMBER_OF_POSITIONS = 4;
+    public static final int NUMBER_OF_DIRECTIONS = 4;
 
     private boolean isOpen = false;
     private final boolean isBorder;

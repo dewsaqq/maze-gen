@@ -5,7 +5,7 @@ public class Cell {
     private final Wall[] walls;
 
     public Cell() {
-        walls = new Wall[4];
+        walls = new Wall[Wall.NUMBER_OF_DIRECTIONS];
     }
 
     public boolean isVisited() {
@@ -16,7 +16,7 @@ public class Cell {
         this.isVisited = true;
     }
 
-    public void setWall(int direction, Wall wall) {
+    public void initWall(int direction, Wall wall) {
         walls[direction] = wall;
     }
 
@@ -30,7 +30,7 @@ public class Cell {
     }
 
     public void openWallWithCell(Cell cell) {
-        for(int i = 0; i < Wall.NUMBER_OF_POSITIONS; i++) {
+        for(int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
             if(walls[i].getAdjacentCell() == cell) openWall(i);
         }
     }
