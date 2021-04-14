@@ -6,17 +6,16 @@ import maze.Grid;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class BacktrackingGenerator {
-    private final Grid grid;
-    private final int height;
-    private final int width;
-
-    public BacktrackingGenerator(int height, int width) {
-        this.grid = new Grid(height, width);
-        this.height = height;
-        this.width = width;
+public class BacktrackingGenerator extends Generator {
+    public BacktrackingGenerator(int size) {
+        super(size);
     }
 
+    public BacktrackingGenerator(int height, int width) {
+        super(height, width);
+    }
+
+    @Override
     public Grid generateMaze() {
         Random random = new Random();
 
