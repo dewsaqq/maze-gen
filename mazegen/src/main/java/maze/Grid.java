@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Grid {
     private final Cell[][] cells;
+    private final ArrayList<Wall> walls = new ArrayList<>();
     private final Random random = new Random();
     public final int height;
     public final int width;
@@ -31,61 +32,67 @@ public class Grid {
 
     private void initGrid() {
         initCells();
-        initBordersWalls();
         initCellsWalls();
     }
 
     private void initCells() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                cells[i][j] = new Cell();
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                cells[row][column] = new Cell();
             }
-        }
-    }
-
-    private void initBordersWalls() {
-        for (int j = 0; j < width; j++) {
-            cells[0][j].initWall(Wall.NORTH, new Wall());
-            cells[height - 1][j].initWall(Wall.SOUTH, new Wall());
-        }
-
-        for (int i = 0; i < height; i++) {
-            cells[i][0].initWall(Wall.WEST, new Wall());
-            cells[i][width - 1].initWall(Wall.EAST, new Wall());
         }
     }
 
     private void initCellsWalls() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (cells[i][j].getWall(Wall.NORTH) == null)
-                    cells[i][j].initWall(Wall.NORTH, new Wall(cells[i - 1][j]));
-                if (cells[i][j].getWall(Wall.SOUTH) == null)
-                    cells[i][j].initWall(Wall.SOUTH, new Wall(cells[i + 1][j]));
-                if (cells[i][j].getWall(Wall.EAST) == null) cells[i][j].initWall(Wall.EAST, new Wall(cells[i][j + 1]));
-                if (cells[i][j].getWall(Wall.WEST) == null) cells[i][j].initWall(Wall.WEST, new Wall(cells[i][j - 1]));
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                if (row == height - 1 && column == width - 1) {
+                    continue;
+                }
+                if (column == width - 1) {
+                    createHorizontalWall(cells[row][column], cells[row + 1][column]);
+                } else if (row == height - 1) {
+                    createVerticalWall(cells[row][column], cells[row][column + 1]);
+                } else {
+                    createVerticalWall(cells[row][column], cells[row][column + 1]);
+                    createHorizontalWall(cells[row][column], cells[row + 1][column]);
+                }
             }
         }
     }
 
-    public ArrayList<Cell> getNeighbours(Cell cell, boolean isVisited) {
-        ArrayList<Cell> neighbours = new ArrayList<>();
-        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-            if (!cell.getWall(i).isBorder() && cell.getWall(i).getAdjacentCell().isVisited() == isVisited)
-                neighbours.add(cell.getWall(i).getAdjacentCell());
-        }
-
-        return neighbours;
+    private void createVerticalWall(Cell firstCell, Cell secondCell) {
+        Wall verticalWall = new Wall(firstCell, secondCell);
+        walls.add(verticalWall);
+        firstCell.addWall(WallPosition.EAST, verticalWall);
+        secondCell.addWall(WallPosition.WEST, verticalWall);
     }
 
-    public ArrayList<Cell> getAllNeighbours(Cell cell) {
-        ArrayList<Cell> neighbours = new ArrayList<>();
-        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-            if (!cell.getWall(i).isBorder()) neighbours.add(cell.getWall(i).getAdjacentCell());
-        }
-
-        return neighbours;
+    private void createHorizontalWall(Cell firstCell, Cell secondCell) {
+        Wall horizontalWall = new Wall(firstCell, secondCell);
+        walls.add(horizontalWall);
+        firstCell.addWall(WallPosition.SOUTH, horizontalWall);
+        secondCell.addWall(WallPosition.NORTH, horizontalWall);
     }
+
+//    public ArrayList<Cell> getNeighbours(Cell cell, boolean isVisited) {
+//        ArrayList<Cell> neighbours = new ArrayList<>();
+//        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
+//            if (!cell.getWall(i).isBorder() && cell.getWall(i).getAdjacentCell().isVisited() == isVisited)
+//                neighbours.add(cell.getWall(i).getAdjacentCell());
+//        }
+//
+//        return neighbours;
+//    }
+//
+//    public ArrayList<Cell> getAllNeighbours(Cell cell) {
+//        ArrayList<Cell> neighbours = new ArrayList<>();
+//        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
+//            if (!cell.getWall(i).isBorder()) neighbours.add(cell.getWall(i).getAdjacentCell());
+//        }
+//
+//        return neighbours;
+//    }
 
     @Override
     public String toString() {
@@ -98,14 +105,14 @@ public class Grid {
             gridString.append("#");
             for (int j = 0; j < width; j++) {
                 gridString.append(" ");
-                if (cells[i][j].getWall(Wall.EAST).isOpen()) gridString.append(" ");
+                if (cells[i][j].getWall(WallPosition.EAST) != null && cells[i][j].getWall(WallPosition.EAST).isOpen()) gridString.append(" ");
                 else gridString.append("#");
             }
             gridString.append("\n");
 
             for (int j = 0; j < width; j++) {
                 gridString.append("#");
-                if (cells[i][j].getWall(Wall.SOUTH).isOpen()) gridString.append(" ");
+                if (cells[i][j].getWall(WallPosition.SOUTH) != null && cells[i][j].getWall(WallPosition.SOUTH).isOpen()) gridString.append(" ");
                 else gridString.append("#");
             }
             gridString.append("#\n");
