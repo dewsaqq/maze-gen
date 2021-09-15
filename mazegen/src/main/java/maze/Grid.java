@@ -94,6 +94,10 @@ public class Grid {
 //        return neighbours;
 //    }
 
+    public void test() {
+        System.out.println(cells[3][4].getNeighbours());
+    }
+
     @Override
     public String toString() {
         StringBuilder gridString = new StringBuilder();

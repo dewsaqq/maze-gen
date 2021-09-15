@@ -1,5 +1,6 @@
 package maze;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Cell {
@@ -24,6 +25,35 @@ public class Cell {
 
     public Wall getWall(WallPosition position) {
         return walls.get(position);
+    }
+
+    public Wall getWall(Cell adjacentCell) {
+        for (Wall wall : walls.values()) {
+            if (wall.getAdjacentCell(this).equals(adjacentCell)) return wall;
+        }
+
+        return null;
+    }
+
+    public ArrayList<Cell> getNeighbours() {
+        ArrayList<Cell> cellNeighbours = new ArrayList<>();
+
+        for (Wall wall : walls.values()) {
+            cellNeighbours.add(wall.getAdjacentCell(this));
+        }
+
+        return cellNeighbours;
+    }
+
+    public ArrayList<Cell> getUnvisitedNeighbours() {
+        ArrayList<Cell> cellUnvisitedNeighbours = new ArrayList<>();
+
+        for (Wall wall : walls.values()) {
+            Cell neighbour = wall.getAdjacentCell(this);
+            if (!neighbour.isVisited()) cellUnvisitedNeighbours.add(neighbour);
+        }
+
+        return cellUnvisitedNeighbours;
     }
 
 //    public void initWall(int direction, Wall wall) {

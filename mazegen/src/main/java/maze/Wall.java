@@ -22,4 +22,9 @@ public class Wall {
     public ArrayList<Cell> getAdjacentCells() {
         return adjacentCells;
     }
+
+    public Cell getAdjacentCell(Cell cell) {
+        if (adjacentCells.get(0).equals(cell)) return adjacentCells.get(1);
+        else return adjacentCells.get(0);
+    }
 }
