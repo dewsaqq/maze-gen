@@ -1,5 +1,6 @@
 package maze;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +38,23 @@ public class Cell {
         return null;
     }
 
+    public Wall getRandomClosedWall() {
+        ArrayList<Wall> closedWalls = getClosedWalls();
+        if (closedWalls.isEmpty()) return null;
+        Collections.shuffle(closedWalls);
+        return closedWalls.get(0);
+    }
+
     public Collection<Wall> getAllWalls() {
         return walls.values();
+    }
+
+    public ArrayList<Wall> getClosedWalls() {
+        ArrayList<Wall> closedWalls = new ArrayList<>();
+        for (Wall wall : walls.values()) {
+            if (!wall.isOpen()) closedWalls.add(wall);
+        }
+
+        return closedWalls;
     }
 }
