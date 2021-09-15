@@ -26,20 +26,20 @@ public class Maze {
     public void draw(Graphics g) // draws a maze and its solution
     {
         g.setColor(Color.BLACK);
-        for (int i = 0; i < grid.width; i++) {
+        for (int i = 0; i < grid.getWidth(); i++) {
             //north
             g.drawLine((i * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN),
                     ((i + 1) * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN));
 
             //south
-            g.drawLine(i * CELL_WIDTH + MARGIN, grid.height * CELL_WIDTH
-                    + MARGIN, (i + 1) * CELL_WIDTH + MARGIN, grid.height * CELL_WIDTH
+            g.drawLine(i * CELL_WIDTH + MARGIN, grid.getHeight() * CELL_WIDTH
+                    + MARGIN, (i + 1) * CELL_WIDTH + MARGIN, grid.getHeight() * CELL_WIDTH
                     + MARGIN);
         }
-        for (int j = 0; j < grid.height; j++) {
+        for (int j = 0; j < grid.getHeight(); j++) {
             //east
-            g.drawLine((grid.width) * CELL_WIDTH + MARGIN, j * CELL_WIDTH
-                    + MARGIN, (grid.width) * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
+            g.drawLine((grid.getWidth()) * CELL_WIDTH + MARGIN, j * CELL_WIDTH
+                    + MARGIN, (grid.getWidth()) * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
                     + MARGIN);
 
             //west
@@ -47,8 +47,8 @@ public class Maze {
                     * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH + MARGIN);
         }
 
-        for (int i = 0; i < grid.width; i++) {
-            for (int j = 0; j < grid.height; j++) {
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
                 if (grid.getCell(j, i).getWall(WallPosition.NORTH) != null && !grid.getCell(j, i).getWall(WallPosition.NORTH).isOpen()) // if there exists a wall to the
                 // north
                 {
@@ -85,7 +85,7 @@ public class Maze {
     public Dimension windowSize() // returns the ideal size of the window (for
     // JScrollPanes)
     {
-        return new Dimension(grid.width * CELL_WIDTH + MARGIN * 2, grid.height * CELL_WIDTH + MARGIN
+        return new Dimension(grid.getWidth() * CELL_WIDTH + MARGIN * 2, grid.getHeight() * CELL_WIDTH + MARGIN
                 * 2);
     }
 }

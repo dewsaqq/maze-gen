@@ -7,8 +7,8 @@ public class Grid {
     private final Cell[][] cells;
     private final ArrayList<Wall> walls = new ArrayList<>();
     private final Random random = new Random();
-    public final int height;
-    public final int width;
+    private final int height;
+    private final int width;
 
     public Grid(int size) {
         this(size, size);
@@ -20,14 +20,6 @@ public class Grid {
         this.width = width;
 
         initGrid();
-    }
-
-    public Cell getCell(int row, int column) {
-        return cells[row][column];
-    }
-
-    public Cell getRandomCell() {
-        return cells[random.nextInt(height)][random.nextInt(width)];
     }
 
     private void initGrid() {
@@ -75,6 +67,14 @@ public class Grid {
         secondCell.addWall(WallPosition.NORTH, horizontalWall);
     }
 
+    public Cell getCell(int row, int column) {
+        return cells[row][column];
+    }
+
+    public Cell getRandomCell() {
+        return cells[random.nextInt(height)][random.nextInt(width)];
+    }
+
     public ArrayList<Cell> getNeighbours(Cell cell) {
         ArrayList<Cell> cellNeighbours = new ArrayList<>();
 
@@ -94,6 +94,14 @@ public class Grid {
         }
 
         return cellUnvisitedNeighbours;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     @Override
