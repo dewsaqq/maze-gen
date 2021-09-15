@@ -4,7 +4,7 @@ import maze.Cell;
 import maze.Grid;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Random;
 import java.util.Stack;
 
 public class RecursiveBacktrackerGenerator extends Generator {
@@ -12,13 +12,14 @@ public class RecursiveBacktrackerGenerator extends Generator {
         super(size);
     }
 
-    public RecursiveBacktrackerGenerator(int height, int width) {
-        super(height, width);
+    public RecursiveBacktrackerGenerator(int gridHeight, int gridWidth) {
+        super(gridHeight, gridWidth);
     }
 
     @Override
     public Grid generateMaze() {
         Stack<Cell> cellTracker = new Stack<>();
+        Random random = new Random();
 
         Cell activeCell = grid.getRandomCell();
         activeCell.visitCell();
@@ -31,8 +32,7 @@ public class RecursiveBacktrackerGenerator extends Generator {
             if (activeCellUnvisitedNeighbours.isEmpty()) continue;
             cellTracker.push(activeCell);
 
-            Collections.shuffle(activeCellUnvisitedNeighbours);
-            Cell nextCell = activeCellUnvisitedNeighbours.get(0);
+            Cell nextCell = activeCellUnvisitedNeighbours.get(random.nextInt(activeCellUnvisitedNeighbours.size()));
             activeCell.getWall(nextCell).openWall();
             nextCell.visitCell();
             cellTracker.push(nextCell);

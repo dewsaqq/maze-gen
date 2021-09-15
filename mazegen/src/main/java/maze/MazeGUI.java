@@ -10,6 +10,7 @@ package maze;
  */
 
 
+import generator.AldousBroderGenerator;
 import generator.Generator;
 import generator.RecursiveBacktrackerGenerator;
 
@@ -20,11 +21,11 @@ import java.io.*;
 public class MazeGUI {
     public static void main(String[] args) throws IOException, InterruptedException {
         try {
-            int size = 10;
+            int size = 50;
 
 //            Grid grid = new Grid(size);
-//            Generator generator = new BacktrackingGenerator(size);
-            Generator generator = new RecursiveBacktrackerGenerator(size);
+//            Generator generator = new RecursiveBacktrackerGenerator(size);
+            Generator generator = new AldousBroderGenerator(size);
             Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object
             System.out.println(grid);
