@@ -9,10 +9,11 @@ public class Wall {
 
     private boolean isOpen = false;
     private final boolean isBorder;
-    private Cell adjacentCell = null;
+    private final Cell adjacentCell;
 
-    public Wall(boolean isBorder) {
-        this.isBorder = isBorder;
+    public Wall() {
+        this.adjacentCell = null;
+        this.isBorder = true;
     }
 
     public Wall(Cell adjacentCell) {

@@ -30,8 +30,8 @@ public class Cell {
     }
 
     public void openWallWithCell(Cell cell) {
-        for(int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-            if(walls[i].getAdjacentCell() == cell) openWall(i);
+        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
+            if (walls[i].getAdjacentCell() == cell) openWall(i);
         }
     }
 }
