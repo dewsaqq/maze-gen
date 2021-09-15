@@ -26,7 +26,7 @@ public class RecursiveBacktrackerGenerator extends Generator {
 
         while (!cellTracker.empty()) {
             activeCell = cellTracker.pop();
-            ArrayList<Cell> activeCellUnvisitedNeighbours = activeCell.getUnvisitedNeighbours();
+            ArrayList<Cell> activeCellUnvisitedNeighbours = grid.getUnvisitedNeighbours(activeCell);
 
             if (activeCellUnvisitedNeighbours.isEmpty()) continue;
             cellTracker.push(activeCell);
