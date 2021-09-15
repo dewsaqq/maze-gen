@@ -6,7 +6,7 @@ import maze.Grid;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class AldousBroderGenerator extends Generator{
+public class AldousBroderGenerator extends Generator {
     public AldousBroderGenerator(int size) {
         super(size);
     }
@@ -19,15 +19,15 @@ public class AldousBroderGenerator extends Generator{
     public Grid generateMaze() {
         Random random = new Random();
 
-        Cell activeCell = grid.getCell(random.nextInt(height), random.nextInt(width));
+        Cell activeCell = grid.getRandomCell();
         activeCell.visitCell();
         int numberOfCellsVisited = 1;
 
         ArrayList<Cell> activeCellNeighbours = grid.getAllNeighbours(activeCell);
         Cell nextCell = activeCellNeighbours.get(random.nextInt(activeCellNeighbours.size()));
 
-        while(numberOfCellsVisited < height * width) {
-            if(!nextCell.isVisited()){
+        while (numberOfCellsVisited < height * width) {
+            if (!nextCell.isVisited()) {
                 nextCell.visitCell();
                 numberOfCellsVisited++;
                 activeCell.openWallWithCell(nextCell);
@@ -38,6 +38,6 @@ public class AldousBroderGenerator extends Generator{
         }
 
 
-        return super.generateMaze();
+        return grid;
     }
 }

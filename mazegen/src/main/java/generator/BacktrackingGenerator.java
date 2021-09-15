@@ -19,7 +19,7 @@ public class BacktrackingGenerator extends Generator {
     public Grid generateMaze() {
         Random random = new Random();
 
-        Cell activeCell = grid.getCell(random.nextInt(height), random.nextInt(width));
+        Cell activeCell = grid.getRandomCell();
 
         ArrayList<Cell> cellTracker = new ArrayList<>();
         ArrayList<Cell> activeCellNeighbours = grid.getNeighbours(activeCell, false);
@@ -32,11 +32,10 @@ public class BacktrackingGenerator extends Generator {
             activeCell = nextCell;
 
             activeCellNeighbours = grid.getNeighbours(activeCell, false);
-            if(activeCellNeighbours.size() == 0) {
+            if (activeCellNeighbours.size() == 0) {
                 nextCell = cellTracker.get(cellTracker.size() - 1);
                 cellTracker.remove(cellTracker.size() - 1);
-            }
-            else {
+            } else {
                 nextCell = activeCellNeighbours.get(random.nextInt(activeCellNeighbours.size()));
                 cellTracker.add(nextCell);
             }
