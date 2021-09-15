@@ -75,27 +75,25 @@ public class Grid {
         secondCell.addWall(WallPosition.NORTH, horizontalWall);
     }
 
-//    public ArrayList<Cell> getNeighbours(Cell cell, boolean isVisited) {
-//        ArrayList<Cell> neighbours = new ArrayList<>();
-//        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-//            if (!cell.getWall(i).isBorder() && cell.getWall(i).getAdjacentCell().isVisited() == isVisited)
-//                neighbours.add(cell.getWall(i).getAdjacentCell());
-//        }
-//
-//        return neighbours;
-//    }
-//
-//    public ArrayList<Cell> getAllNeighbours(Cell cell) {
-//        ArrayList<Cell> neighbours = new ArrayList<>();
-//        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-//            if (!cell.getWall(i).isBorder()) neighbours.add(cell.getWall(i).getAdjacentCell());
-//        }
-//
-//        return neighbours;
-//    }
+    public ArrayList<Cell> getNeighbours(Cell cell) {
+        ArrayList<Cell> cellNeighbours = new ArrayList<>();
 
-    public void test() {
-        System.out.println(cells[3][4].getNeighbours());
+        for (Wall wall : cell.getAllWalls()) {
+            cellNeighbours.add(wall.getAdjacentCell(cell));
+        }
+
+        return cellNeighbours;
+    }
+
+    public ArrayList<Cell> getUnvisitedNeighbours(Cell cell) {
+        ArrayList<Cell> cellUnvisitedNeighbours = new ArrayList<>();
+
+        for (Wall wall : cell.getAllWalls()) {
+            Cell neighbour = wall.getAdjacentCell(cell);
+            if (!neighbour.isVisited()) cellUnvisitedNeighbours.add(neighbour);
+        }
+
+        return cellUnvisitedNeighbours;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package maze;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Cell {
@@ -35,43 +37,7 @@ public class Cell {
         return null;
     }
 
-    public ArrayList<Cell> getNeighbours() {
-        ArrayList<Cell> cellNeighbours = new ArrayList<>();
-
-        for (Wall wall : walls.values()) {
-            cellNeighbours.add(wall.getAdjacentCell(this));
-        }
-
-        return cellNeighbours;
+    public Collection<Wall> getAllWalls() {
+        return walls.values();
     }
-
-    public ArrayList<Cell> getUnvisitedNeighbours() {
-        ArrayList<Cell> cellUnvisitedNeighbours = new ArrayList<>();
-
-        for (Wall wall : walls.values()) {
-            Cell neighbour = wall.getAdjacentCell(this);
-            if (!neighbour.isVisited()) cellUnvisitedNeighbours.add(neighbour);
-        }
-
-        return cellUnvisitedNeighbours;
-    }
-
-//    public void initWall(int direction, Wall wall) {
-//        walls[direction] = wall;
-//    }
-//
-//    public Wall getWall(int direction) {
-//        return walls[direction];
-//    }
-//
-//    public void openWall(int direction) {
-//        walls[direction].setOpen();
-//        walls[direction].getAdjacentCell().getWall(Wall.getOppositeDirection(direction)).setOpen();
-//    }
-//
-//    public void openWallWithCell(Cell cell) {
-//        for (int i = 0; i < Wall.NUMBER_OF_DIRECTIONS; i++) {
-//            if (walls[i].getAdjacentCell() == cell) openWall(i);
-//        }
-//    }
 }
