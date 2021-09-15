@@ -1,7 +1,10 @@
 package maze;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class Grid {
     private final Cell[][] cells;
@@ -9,6 +12,7 @@ public class Grid {
     private final Random random = new Random();
     private final int height;
     private final int width;
+    private final int numberOfCells;
 
     public Grid(int size) {
         this(size, size);
@@ -18,6 +22,7 @@ public class Grid {
         this.cells = new Cell[height][width];
         this.height = height;
         this.width = width;
+        numberOfCells = height * width;
 
         initGrid();
     }
@@ -30,7 +35,6 @@ public class Grid {
     private void initCells() {
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
-                cells[row][column] = new Cell();
             }
         }
     }
@@ -102,6 +106,20 @@ public class Grid {
 
     public int getWidth() {
         return width;
+    }
+
+    public int getNumberOfCells() {
+        return numberOfCells;
+    }
+
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
+    public List<Cell> getCellsList() {
+        return Arrays.stream(cells)
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
