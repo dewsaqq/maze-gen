@@ -1,43 +1,25 @@
 package maze;
 
+import java.util.ArrayList;
+
 public class Wall {
-    public static final int NORTH = 0;
-    public static final int SOUTH = 2;
-    public static final int EAST = 1;
-    public static final int WEST = 3;
-    public static final int NUMBER_OF_DIRECTIONS = 4;
-
+    private final ArrayList<Cell> adjacentCells;
     private boolean isOpen = false;
-    private final boolean isBorder;
-    private final Cell adjacentCell;
 
-    public Wall() {
-        this.adjacentCell = null;
-        this.isBorder = true;
+    public Wall(Cell firstCell, Cell secondCell) {
+        adjacentCells = new ArrayList<>();
+        adjacentCells.add(firstCell);
+        adjacentCells.add(secondCell);
     }
-
-    public Wall(Cell adjacentCell) {
-        this.adjacentCell = adjacentCell;
-        this.isBorder = false;
-    }
-
-    public boolean isBorder() {
-        return isBorder;
-    }
-
     public boolean isOpen() {
         return isOpen;
     }
 
-    public void setOpen() {
+    public void openWall() {
         isOpen = true;
     }
 
-    public Cell getAdjacentCell() {
-        return adjacentCell;
-    }
-
-    public static int getOppositeDirection(int direction) {
-        return (direction + 2) % 4;
+    public ArrayList<Cell> getAdjacentCells() {
+        return adjacentCells;
     }
 }
