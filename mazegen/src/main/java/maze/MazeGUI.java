@@ -10,10 +10,7 @@ package maze;
  */
 
 
-import generator.AldousBroderGenerator;
-import generator.Generator;
-import generator.KruskalGenerator;
-import generator.RecursiveBacktrackerGenerator;
+import generator.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +25,9 @@ public class MazeGUI {
 //            Generator generator = new RecursiveBacktrackerGenerator(size);
 //            Generator generator = new AldousBroderGenerator(size);
 //            Grid grid = generator.generateMaze();
-            Generator generator = new KruskalGenerator(size);
+//            Generator generator = new KruskalGenerator(size);
+//            Grid grid = generator.generateMaze();
+            Generator generator = new PrimGenerator(size);
             Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object
             System.out.println(grid);

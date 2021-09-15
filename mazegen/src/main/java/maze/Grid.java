@@ -35,6 +35,7 @@ public class Grid {
     private void initCells() {
         for (int row = 0; row < height; row++) {
             for (int column = 0; column < width; column++) {
+                cells[row][column] = new Cell();
             }
         }
     }
