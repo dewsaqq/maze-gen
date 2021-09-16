@@ -19,19 +19,14 @@ import java.io.*;
 public class MazeGUI {
     public static void main(String[] args) throws IOException, InterruptedException {
         try {
-            int size = 10;
+            int size = 20;
 
 
 //            Generator generator = new RecursiveBacktrackerGenerator(size);
-//            Grid grid = generator.generateMaze();
 //            Generator generator = new AldousBroderGenerator(size);
-//            Grid grid = generator.generateMaze();
 //            Generator generator = new KruskalGenerator(size);
-//            Grid grid = generator.generateMaze();
 //            Generator generator = new PrimGenerator(size);
-//            Grid grid = generator.generateMaze();
 //            Generator generator = new BoruvkaGenerator(size);
-//            Grid grid = generator.generateMaze();
             Generator generator = new WilsonGenerator(size);
             Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object

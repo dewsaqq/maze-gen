@@ -1,10 +1,10 @@
 package generator;
 
+import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class AldousBroderGenerator extends Generator {
     public AldousBroderGenerator(int size) {
@@ -17,15 +17,13 @@ public class AldousBroderGenerator extends Generator {
 
     @Override
     public Grid generateMaze() {
-        Random random = new Random();
-
         Cell activeCell = grid.getRandomCell();
         activeCell.visitCell();
         int numberOfCellsVisited = 1;
         int numberOfCells = grid.getHeight() * grid.getWidth();
 
         ArrayList<Cell> activeCellNeighbours = grid.getNeighbours(activeCell);
-        Cell nextCell = activeCellNeighbours.get(random.nextInt(activeCellNeighbours.size()));
+        Cell nextCell = CollectionHelper.getRandomListElement(activeCellNeighbours);
 
         while (numberOfCellsVisited < numberOfCells) {
             if (!nextCell.isVisited()) {
@@ -36,7 +34,7 @@ public class AldousBroderGenerator extends Generator {
 
             activeCell = nextCell;
             activeCellNeighbours = grid.getNeighbours(activeCell);
-            nextCell = activeCellNeighbours.get(random.nextInt(activeCellNeighbours.size()));
+            nextCell = CollectionHelper.getRandomListElement(activeCellNeighbours);
         }
 
 

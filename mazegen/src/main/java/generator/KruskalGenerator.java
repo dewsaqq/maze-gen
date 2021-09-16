@@ -1,5 +1,6 @@
 package generator;
 
+import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 import maze.Wall;
@@ -17,14 +18,13 @@ public class KruskalGenerator extends SetBasedGenerator {
 
     @Override
     public Grid generateMaze() {
-        Random random = new Random();
         ArrayList<Wall> walls = grid.getWalls();
 
         createSetsForEachCell();
 
         Cell controlCell = cellForest.keySet().iterator().next(); //controlCell to check if all cells are in single set
         while (cellForest.get(controlCell).size() != grid.getNumberOfCells()) {
-            Wall drawnWall = walls.get(random.nextInt(walls.size()));
+            Wall drawnWall = CollectionHelper.getRandomListElement(walls);
             ArrayList<Cell> adjacentCells = drawnWall.getAdjacentCells();
             Cell firstCell = adjacentCells.get(0);
             Cell secondCell = adjacentCells.get(1);

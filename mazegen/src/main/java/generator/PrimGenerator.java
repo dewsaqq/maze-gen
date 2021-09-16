@@ -1,12 +1,12 @@
 package generator;
 
+import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 import maze.Wall;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 public class PrimGenerator extends Generator {
     public PrimGenerator(int size) {
@@ -19,14 +19,13 @@ public class PrimGenerator extends Generator {
 
     @Override
     public Grid generateMaze() {
-        Random random = new Random();
         HashSet<Cell> visitedCells = new HashSet<>();
         Cell activeCell = grid.getRandomCell();
         ArrayList<Wall> wallsToCheck = new ArrayList<>(activeCell.getAllWalls());
         visitedCells.add(activeCell);
 
         while (visitedCells.size() != grid.getNumberOfCells()) {
-            Wall nextWallToOpen = wallsToCheck.get(random.nextInt(wallsToCheck.size()));
+            Wall nextWallToOpen = CollectionHelper.getRandomListElement(wallsToCheck);
             wallsToCheck.remove(nextWallToOpen);
 
             ArrayList<Cell> adjacentCells = nextWallToOpen.getAdjacentCells();

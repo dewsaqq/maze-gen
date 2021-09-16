@@ -1,10 +1,10 @@
 package generator;
 
+import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Stack;
 
 public class RecursiveBacktrackerGenerator extends Generator {
@@ -19,7 +19,6 @@ public class RecursiveBacktrackerGenerator extends Generator {
     @Override
     public Grid generateMaze() {
         Stack<Cell> cellTracker = new Stack<>();
-        Random random = new Random();
 
         Cell activeCell = grid.getRandomCell();
         activeCell.visitCell();
@@ -32,7 +31,7 @@ public class RecursiveBacktrackerGenerator extends Generator {
             if (activeCellUnvisitedNeighbours.isEmpty()) continue;
             cellTracker.push(activeCell);
 
-            Cell nextCell = activeCellUnvisitedNeighbours.get(random.nextInt(activeCellUnvisitedNeighbours.size()));
+            Cell nextCell = CollectionHelper.getRandomListElement(activeCellUnvisitedNeighbours);
             activeCell.getWall(nextCell).openWall();
             nextCell.visitCell();
             cellTracker.push(nextCell);
