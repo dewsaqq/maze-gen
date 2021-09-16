@@ -22,23 +22,8 @@ public class Main {
 //            System.out.println(duration);
 //        }
 
-//        Generator pg = new BoruvkaGenerator(4);
-//        System.out.println(pg.generateMaze());
-//
-        HashMap<Integer, HashSet<Integer>> cells = new HashMap<>();
-        cells.put(1, new HashSet<>(Arrays.asList(1)));
-        cells.put(2, new HashSet<>(Arrays.asList(2)));
-        cells.put(3, new HashSet<>(Arrays.asList(3)));
-        cells.put(5, new HashSet<>(Arrays.asList(3)));
-        cells.put(4, new HashSet<>(Arrays.asList(4)));
-
-        Collection<HashSet<Integer>> integers = cells.values();
-        List<HashSet<Integer>> distinctElements = integers.stream()
-                .distinct()
-                .collect(Collectors.toList());
-
-        System.out.println(cells.values());
-        System.out.println(distinctElements);
+        Generator pg = new BoruvkaGenerator(4);
+        System.out.println(pg.generateMaze());
 
     }
 }

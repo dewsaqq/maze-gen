@@ -5,9 +5,10 @@ import maze.Grid;
 import maze.Wall;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BoruvkaGenerator extends Generator {
-    private ArrayList<HashSet<Cell>> cellForest;
+    private final HashMap<Cell, HashSet<Cell>> cellForest = new HashMap<>();
 
     public BoruvkaGenerator(int size) {
         this(size, size);
@@ -15,78 +16,77 @@ public class BoruvkaGenerator extends Generator {
 
     public BoruvkaGenerator(int gridHeight, int gridWidth) {
         super(gridHeight, gridWidth);
-        initializeGenerator();
     }
 
     @Override
     public Grid generateMaze() {
-        while (cellForest.size() != 1) {
-            HashSet<Wall> chosenWallsToOpen = new HashSet<>();
+        List<HashSet<Cell>> distinctSets = generateDistinctSets();
 
-            for (HashSet<Cell> cellTree : cellForest) {
+        for (Cell cell : grid.getCellsList()) {
+            cellForest.put(cell, new HashSet<>(Collections.singletonList(cell)));
+        }
+
+        while (distinctSets.size() != 1) {
+            HashSet<Wall> chosenWallsToOpen = new HashSet<>();
+            System.out.println(distinctSets.size());
+
+            for (HashSet<Cell> cellTree : distinctSets) {
                 Cell chosenCell;
                 Wall chosenWall = null;
 
                 while (chosenWall == null) {
                     chosenCell = Generator.getRandomSetElement(cellTree);
                     chosenWall = chosenCell.getRandomClosedWall();
-                    if (isWallConnectingSingleSet(chosenWall)) chosenWall = null;
+                    if (isWallWithinSingleSet(chosenWall)) chosenWall = null;
                 }
 
                 chosenWallsToOpen.add(chosenWall);
             }
 
-            for (Wall wall : chosenWallsToOpen) {
-                if (!isWallConnectingSingleSet(wall)) {
-                    wall.openWall();
-                    unionTwoSets(wall);
-                }
-            }
+            openChosenWalls(chosenWallsToOpen);
+
+            distinctSets = generateDistinctSets();
         }
 
         return grid;
     }
 
-    private void initializeGenerator() {
-        cellForest = new ArrayList<>();
-
-        for (Cell cell : grid.getCellsList()) {
-            cellForest.add(new HashSet<>(Collections.singletonList(cell)));
-        }
-    }
-
-    private boolean isWallConnectingSingleSet(Wall wall) {
+    private boolean isWallWithinSingleSet(Wall wall) {
         if (wall == null) return false;
-        Cell firstCell = wall.getAdjacentCells().get(0);
-        Cell secondCell = wall.getAdjacentCells().get(1);
+        ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
+        Cell firstCell = adjacentCells.get(0);
+        Cell secondCell = adjacentCells.get(1);
 
-        for (HashSet<Cell> cellTree : cellForest) {
-            if (cellTree.contains(firstCell)) {
-                return cellTree.contains(secondCell);
-            }
-        }
-
-        return false;
+        return areCellsInSingleSet(firstCell, secondCell);
     }
 
-    private void unionTwoSets(Wall wall) {
-        Cell firstCell = wall.getAdjacentCells().get(0);
-        Cell secondCell = wall.getAdjacentCells().get(1);
+    private void openChosenWalls(HashSet<Wall> walls) {
+        for (Wall wall : walls) {
+            ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
+            Cell firstCell = adjacentCells.get(0);
+            Cell secondCell = adjacentCells.get(1);
 
-        HashSet<Cell> firstCellTree = null;
-        HashSet<Cell> secondCellTree = null;
-
-        for (HashSet<Cell> cellTree : cellForest) {
-            if (cellTree.contains(firstCell)) {
-                firstCellTree = cellTree;
+            if (!areCellsInSingleSet(firstCell, secondCell)) {
+                wall.openWall();
+                unionSets(firstCell, secondCell);
             }
-            if (cellTree.contains(secondCell)) {
-                secondCellTree = cellTree;
-            }
-            if (firstCellTree != null && secondCellTree != null) break;
         }
+    }
 
-        firstCellTree.addAll(secondCellTree);
-        cellForest.remove(secondCellTree);
+    private void unionSets(Cell firstCell, Cell secondCell) {
+        cellForest.get(firstCell).addAll(cellForest.get(secondCell));
+        for (Cell cell : cellForest.get(firstCell)) {
+            cellForest.replace(cell, cellForest.get(firstCell));
+        }
+    }
+
+    private boolean areCellsInSingleSet(Cell firstCell, Cell secondCell) {
+        return cellForest.get(firstCell).contains(secondCell);
+    }
+
+    private List<HashSet<Cell>> generateDistinctSets() {
+        return cellForest.values().stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
