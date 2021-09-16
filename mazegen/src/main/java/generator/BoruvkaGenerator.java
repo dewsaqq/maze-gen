@@ -7,11 +7,9 @@ import maze.Wall;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BoruvkaGenerator extends Generator {
-    private final HashMap<Cell, HashSet<Cell>> cellForest = new HashMap<>();
-
+public class BoruvkaGenerator extends SetBasedGenerator {
     public BoruvkaGenerator(int size) {
-        this(size, size);
+        super(size);
     }
 
     public BoruvkaGenerator(int gridHeight, int gridWidth) {
@@ -20,32 +18,30 @@ public class BoruvkaGenerator extends Generator {
 
     @Override
     public Grid generateMaze() {
-        List<HashSet<Cell>> distinctSets = generateDistinctSets();
+        List<HashSet<Cell>> distinctSets = getDistinctCellSets();
 
-        for (Cell cell : grid.getCellsList()) {
-            cellForest.put(cell, new HashSet<>(Collections.singletonList(cell)));
-        }
+        createSetsForEachCell();
 
         while (distinctSets.size() != 1) {
-            HashSet<Wall> chosenWallsToOpen = new HashSet<>();
+            HashSet<Wall> wallsToOpen = new HashSet<>();
             System.out.println(distinctSets.size());
 
             for (HashSet<Cell> cellTree : distinctSets) {
-                Cell chosenCell;
-                Wall chosenWall = null;
+                Cell selectedCell;
+                Wall selectedWall = null;
 
-                while (chosenWall == null) {
-                    chosenCell = Generator.getRandomSetElement(cellTree);
-                    chosenWall = chosenCell.getRandomClosedWall();
-                    if (isWallWithinSingleSet(chosenWall)) chosenWall = null;
+                while (selectedWall == null) {
+                    selectedCell = Generator.getRandomSetElement(cellTree);
+                    selectedWall = selectedCell.getRandomClosedWall();
+                    if (isWallWithinSingleSet(selectedWall)) selectedWall = null;
                 }
 
-                chosenWallsToOpen.add(chosenWall);
+                wallsToOpen.add(selectedWall);
             }
 
-            openChosenWalls(chosenWallsToOpen);
+            openSelectedWalls(wallsToOpen);
 
-            distinctSets = generateDistinctSets();
+            distinctSets = getDistinctCellSets();
         }
 
         return grid;
@@ -60,7 +56,7 @@ public class BoruvkaGenerator extends Generator {
         return areCellsInSingleSet(firstCell, secondCell);
     }
 
-    private void openChosenWalls(HashSet<Wall> walls) {
+    private void openSelectedWalls(HashSet<Wall> walls) {
         for (Wall wall : walls) {
             ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
             Cell firstCell = adjacentCells.get(0);
@@ -73,18 +69,7 @@ public class BoruvkaGenerator extends Generator {
         }
     }
 
-    private void unionSets(Cell firstCell, Cell secondCell) {
-        cellForest.get(firstCell).addAll(cellForest.get(secondCell));
-        for (Cell cell : cellForest.get(firstCell)) {
-            cellForest.replace(cell, cellForest.get(firstCell));
-        }
-    }
-
-    private boolean areCellsInSingleSet(Cell firstCell, Cell secondCell) {
-        return cellForest.get(firstCell).contains(secondCell);
-    }
-
-    private List<HashSet<Cell>> generateDistinctSets() {
+    private List<HashSet<Cell>> getDistinctCellSets() {
         return cellForest.values().stream()
                 .distinct()
                 .collect(Collectors.toList());

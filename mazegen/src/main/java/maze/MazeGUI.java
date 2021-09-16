@@ -21,16 +21,17 @@ public class MazeGUI {
         try {
             int size = 10;
 
-//            Grid grid = new Grid(size);
-//            Generator generator = new RecursiveBacktrackerGenerator(size);
+
+            Generator generator = new RecursiveBacktrackerGenerator(size);
+            Grid grid = generator.generateMaze();
 //            Generator generator = new AldousBroderGenerator(size);
 //            Grid grid = generator.generateMaze();
 //            Generator generator = new KruskalGenerator(size);
 //            Grid grid = generator.generateMaze();
 //            Generator generator = new PrimGenerator(size);
 //            Grid grid = generator.generateMaze();
-            Generator generator = new BoruvkaGenerator(size);
-            Grid grid = generator.generateMaze();
+//            Generator generator = new BoruvkaGenerator(size);
+//            Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object
             System.out.println(grid);
 

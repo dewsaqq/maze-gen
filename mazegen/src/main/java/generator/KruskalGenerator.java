@@ -6,52 +6,37 @@ import maze.Wall;
 
 import java.util.*;
 
-public class KruskalGenerator extends Generator {
-    private ArrayList<Wall> walls;
-    private HashMap<Cell, HashSet<Cell>> cellForest;
-
+public class KruskalGenerator extends SetBasedGenerator {
     public KruskalGenerator(int size) {
-        this(size, size);
+        super(size);
     }
 
     public KruskalGenerator(int gridHeight, int gridWidth) {
         super(gridHeight, gridWidth);
-        initializeGenerator();
     }
 
     @Override
     public Grid generateMaze() {
         Random random = new Random();
-        Wall drawnWall;
-        Cell controlCell = cellForest.keySet().iterator().next();
+        ArrayList<Wall> walls = grid.getWalls();
 
+        createSetsForEachCell();
+
+        Cell controlCell = cellForest.keySet().iterator().next(); //controlCell to check if all cells are in single set
         while (cellForest.get(controlCell).size() != grid.getNumberOfCells()) {
-            drawnWall = walls.get(random.nextInt(walls.size()));
-
+            Wall drawnWall = walls.get(random.nextInt(walls.size()));
             ArrayList<Cell> adjacentCells = drawnWall.getAdjacentCells();
             Cell firstCell = adjacentCells.get(0);
             Cell secondCell = adjacentCells.get(1);
 
-            if (!cellForest.get(firstCell).contains(secondCell)) {
+            if (!areCellsInSingleSet(firstCell, secondCell)) {
                 drawnWall.openWall();
-                cellForest.get(firstCell).addAll(cellForest.get(secondCell));
-                for (Cell cell : cellForest.get(firstCell)) {
-                    cellForest.replace(cell, cellForest.get(firstCell));
-                }
+                unionSets(firstCell, secondCell);
             }
 
             walls.remove(drawnWall);
         }
 
         return grid;
-    }
-
-    private void initializeGenerator() {
-        walls = grid.getWalls();
-        cellForest = new HashMap<>();
-
-        for (Cell cell : grid.getCellsList()) {
-            cellForest.put(cell, new HashSet<>(Collections.singletonList(cell)));
-        }
     }
 }

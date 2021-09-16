@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class PrimGenerator extends Generator {
     public PrimGenerator(int size) {
-        this(size, size);
+        super(size);
     }
 
     public PrimGenerator(int gridHeight, int gridWidth) {
@@ -25,12 +25,11 @@ public class PrimGenerator extends Generator {
         ArrayList<Wall> wallsToCheck = new ArrayList<>(activeCell.getAllWalls());
         visitedCells.add(activeCell);
 
-        Wall nextWallToRemove;
         while (visitedCells.size() != grid.getNumberOfCells()) {
-            nextWallToRemove = wallsToCheck.get(random.nextInt(wallsToCheck.size()));
-            wallsToCheck.remove(nextWallToRemove);
+            Wall nextWallToOpen = wallsToCheck.get(random.nextInt(wallsToCheck.size()));
+            wallsToCheck.remove(nextWallToOpen);
 
-            ArrayList<Cell> adjacentCells = nextWallToRemove.getAdjacentCells();
+            ArrayList<Cell> adjacentCells = nextWallToOpen.getAdjacentCells();
             Cell firstCell = adjacentCells.get(0);
             Cell secondCell = adjacentCells.get(1);
 
@@ -39,11 +38,11 @@ public class PrimGenerator extends Generator {
                 activeCell = secondCell;
             } else activeCell = firstCell;
 
-            nextWallToRemove.openWall();
+            nextWallToOpen.openWall();
             visitedCells.add(activeCell);
 
-            for (Wall wall : activeCell.getAllWalls()) {
-                if (!wall.isOpen() && !wallsToCheck.contains(wall)) wallsToCheck.add(wall);
+            for (Wall wall : activeCell.getClosedWalls()) {
+                if (!wallsToCheck.contains(wall)) wallsToCheck.add(wall);
             }
         }
 
