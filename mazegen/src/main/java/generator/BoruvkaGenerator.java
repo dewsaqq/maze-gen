@@ -1,5 +1,6 @@
 package generator;
 
+import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 import maze.Wall;
@@ -31,7 +32,7 @@ public class BoruvkaGenerator extends SetBasedGenerator {
                 Wall selectedWall = null;
 
                 while (selectedWall == null) {
-                    selectedCell = Generator.getRandomSetElement(cellTree);
+                    selectedCell = CollectionHelper.getRandomSetElement(cellTree);
                     selectedWall = selectedCell.getRandomClosedWall();
                     if (isWallWithinSingleSet(selectedWall)) selectedWall = null;
                 }

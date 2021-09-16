@@ -22,7 +22,7 @@ public class Main {
 //            System.out.println(duration);
 //        }
 
-        Generator pg = new BoruvkaGenerator(4);
+        Generator pg = new WilsonGenerator(4);
         System.out.println(pg.generateMaze());
 
     }

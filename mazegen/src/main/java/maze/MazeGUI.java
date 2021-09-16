@@ -22,8 +22,8 @@ public class MazeGUI {
             int size = 10;
 
 
-            Generator generator = new RecursiveBacktrackerGenerator(size);
-            Grid grid = generator.generateMaze();
+//            Generator generator = new RecursiveBacktrackerGenerator(size);
+//            Grid grid = generator.generateMaze();
 //            Generator generator = new AldousBroderGenerator(size);
 //            Grid grid = generator.generateMaze();
 //            Generator generator = new KruskalGenerator(size);
@@ -32,6 +32,8 @@ public class MazeGUI {
 //            Grid grid = generator.generateMaze();
 //            Generator generator = new BoruvkaGenerator(size);
 //            Grid grid = generator.generateMaze();
+            Generator generator = new WilsonGenerator(size);
+            Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object
             System.out.println(grid);
 
