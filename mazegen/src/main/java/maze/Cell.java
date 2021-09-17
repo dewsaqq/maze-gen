@@ -5,6 +5,8 @@ import helper.CollectionHelper;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Cell {
@@ -15,16 +17,16 @@ public class Cell {
         walls = new HashMap<>();
     }
 
-    public boolean isVisited() {
-        return isVisited;
+    public void addWall(WallPosition position, Wall wall) {
+        walls.put(position, wall);
     }
 
     public void visitCell() {
-        this.isVisited = true;
+        isVisited = true;
     }
 
-    public void addWall(WallPosition position, Wall wall) {
-        walls.put(position, wall);
+    public Collection<Wall> getWalls() {
+        return walls.values();
     }
 
     public Wall getWall(WallPosition position) {
@@ -43,22 +45,19 @@ public class Cell {
         return CollectionHelper.getRandomListElement(new ArrayList<>(walls.values()));
     }
 
+    public List<Wall> getClosedWalls() {
+        return walls.values().stream()
+                    .filter(w -> !w.isOpen())
+                    .collect(Collectors.toList());
+    }
+
     public Wall getRandomClosedWall() {
-        ArrayList<Wall> closedWalls = getClosedWalls();
+        List<Wall> closedWalls = getClosedWalls();
         if (closedWalls.isEmpty()) return null;
         return CollectionHelper.getRandomListElement(closedWalls);
     }
 
-    public Collection<Wall> getWalls() {
-        return walls.values();
-    }
-
-    public ArrayList<Wall> getClosedWalls() {
-        ArrayList<Wall> closedWalls = new ArrayList<>();
-        for (Wall wall : walls.values()) {
-            if (!wall.isOpen()) closedWalls.add(wall);
-        }
-
-        return closedWalls;
+    public boolean isVisited() {
+        return isVisited;
     }
 }

@@ -17,7 +17,7 @@ public abstract class SetBasedGenerator extends Generator {
         super(gridHeight, gridWidth);
     }
 
-    protected void createSetsForEachCell() {
+    protected void createSetForEachCell() {
         for (Cell cell : grid.getCellsList()) {
             cellForest.put(cell, new HashSet<>(Collections.singletonList(cell)));
         }

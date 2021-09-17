@@ -15,14 +15,6 @@ public class Maze {
         this.grid = grid;
     }
 
-    @Override
-    public String toString() {
-        String mazeString = grid.toString();
-        mazeString = mazeString.replaceAll("1", "#");
-        mazeString = mazeString.replaceAll("0", " ");
-        return mazeString;
-    }
-
     public void draw(Graphics g) // draws a maze and its solution
     {
         g.setColor(Color.BLACK);

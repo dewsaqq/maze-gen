@@ -1,5 +1,7 @@
 package maze;
 
+import helper.CollectionHelper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +82,16 @@ public class Grid {
         return cells[random.nextInt(height)][random.nextInt(width)];
     }
 
-    public ArrayList<Cell> getNeighbours(Cell cell) {
+    public Cell getRandomNeighbour(Cell cell) {
+        return CollectionHelper.getRandomListElement(getNeighbours(cell));
+    }
+
+    public Cell getRandomUnvisitedNeighbour(Cell cell) {
+        if (getUnvisitedNeighbours(cell).isEmpty()) return null;
+        return CollectionHelper.getRandomListElement(getUnvisitedNeighbours(cell));
+    }
+
+    private ArrayList<Cell> getNeighbours(Cell cell) {
         ArrayList<Cell> cellNeighbours = new ArrayList<>();
 
         for (Wall wall : cell.getWalls()) {
@@ -90,15 +101,10 @@ public class Grid {
         return cellNeighbours;
     }
 
-    public ArrayList<Cell> getUnvisitedNeighbours(Cell cell) {
-        ArrayList<Cell> cellUnvisitedNeighbours = new ArrayList<>();
-
-        for (Wall wall : cell.getWalls()) {
-            Cell neighbour = wall.getAdjacentCell(cell);
-            if (!neighbour.isVisited()) cellUnvisitedNeighbours.add(neighbour);
-        }
-
-        return cellUnvisitedNeighbours;
+    private List<Cell> getUnvisitedNeighbours(Cell cell) {
+        return getNeighbours(cell).stream()
+                    .filter(c -> !c.isVisited())
+                    .collect(Collectors.toList());
     }
 
     public int getHeight() {
@@ -134,14 +140,16 @@ public class Grid {
             gridString.append("#");
             for (int j = 0; j < width; j++) {
                 gridString.append(" ");
-                if (cells[i][j].getWall(WallPosition.EAST) != null && cells[i][j].getWall(WallPosition.EAST).isOpen()) gridString.append(" ");
+                if (cells[i][j].getWall(WallPosition.EAST) != null && cells[i][j].getWall(WallPosition.EAST).isOpen())
+                    gridString.append(" ");
                 else gridString.append("#");
             }
             gridString.append("\n");
 
             for (int j = 0; j < width; j++) {
                 gridString.append("#");
-                if (cells[i][j].getWall(WallPosition.SOUTH) != null && cells[i][j].getWall(WallPosition.SOUTH).isOpen()) gridString.append(" ");
+                if (cells[i][j].getWall(WallPosition.SOUTH) != null && cells[i][j].getWall(WallPosition.SOUTH).isOpen())
+                    gridString.append(" ");
                 else gridString.append("#");
             }
             gridString.append("#\n");

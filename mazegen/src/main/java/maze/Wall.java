@@ -11,9 +11,6 @@ public class Wall {
         adjacentCells.add(firstCell);
         adjacentCells.add(secondCell);
     }
-    public boolean isOpen() {
-        return isOpen;
-    }
 
     public void openWall() {
         isOpen = true;
@@ -26,5 +23,9 @@ public class Wall {
     public Cell getAdjacentCell(Cell cell) {
         if (adjacentCells.get(0).equals(cell)) return adjacentCells.get(1);
         else return adjacentCells.get(0);
+    }
+
+    public boolean isOpen() {
+        return isOpen;
     }
 }

@@ -8,6 +8,9 @@ import maze.Wall;
 import java.util.*;
 
 public class WilsonGenerator extends Generator {
+    private List<Cell> unvisitedCells;
+    private HashSet<Cell> visitedCells;
+
     public WilsonGenerator(int size) {
         this(size, size);
     }
@@ -18,33 +21,22 @@ public class WilsonGenerator extends Generator {
 
     @Override
     public Grid generateMaze() {
-        List<Cell> unvisitedCells = grid.getCellsList();
-        HashSet<Cell> visitedCells = new HashSet<>();
+        unvisitedCells = grid.getCellsList();
+        visitedCells = new HashSet<>();
 
         Cell firstRandomCell = CollectionHelper.getRandomListElement(unvisitedCells);
-        visitedCells.add(firstRandomCell);
-        unvisitedCells.remove(firstRandomCell);
+        visitCell(firstRandomCell);
 
         while (visitedCells.size() != grid.getNumberOfCells()) {
             Cell activeCell = CollectionHelper.getRandomListElement(unvisitedCells);
-            HashMap<Cell, Wall> randomWalkPath = generateRandomWalk(activeCell, visitedCells);
-
-            while (!visitedCells.contains(activeCell)) {
-                Wall selectedWall = randomWalkPath.get(activeCell);
-                selectedWall.openWall();
-
-                visitedCells.add(activeCell);
-                unvisitedCells.remove(activeCell);
-
-                activeCell = selectedWall.getAdjacentCell(activeCell);
-            }
-
+            HashMap<Cell, Wall> randomWalkPath = generateRandomWalk(activeCell);
+            openWallsFromRandomWalk(randomWalkPath, activeCell);
         }
 
         return grid;
     }
 
-    private HashMap<Cell, Wall> generateRandomWalk(Cell startCell, Set<Cell> stopCells) {
+    private HashMap<Cell, Wall> generateRandomWalk(Cell startCell) {
         HashMap<Cell, Wall> randomWalk = new HashMap<>();
 
         Wall randomWall = startCell.getRandomWall();
@@ -52,7 +44,7 @@ public class WilsonGenerator extends Generator {
 
         Cell nextCell = randomWall.getAdjacentCell(startCell);
 
-        while (!stopCells.contains(nextCell)) {
+        while (!visitedCells.contains(nextCell)) {
             randomWall = nextCell.getRandomWall();
             randomWalk.put(nextCell, randomWall);
 
@@ -60,5 +52,21 @@ public class WilsonGenerator extends Generator {
         }
 
         return randomWalk;
+    }
+
+    private void openWallsFromRandomWalk(HashMap<Cell, Wall> randomWalkPath, Cell activeCell) {
+        while (!visitedCells.contains(activeCell)) {
+            Wall selectedWall = randomWalkPath.get(activeCell);
+            selectedWall.openWall();
+
+            visitCell(activeCell);
+
+            activeCell = selectedWall.getAdjacentCell(activeCell);
+        }
+    }
+
+    private void visitCell(Cell cell) {
+        visitedCells.add(cell);
+        unvisitedCells.remove(cell);
     }
 }

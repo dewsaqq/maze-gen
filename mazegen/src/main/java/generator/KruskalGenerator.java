@@ -20,7 +20,7 @@ public class KruskalGenerator extends SetBasedGenerator {
     public Grid generateMaze() {
         ArrayList<Wall> walls = grid.getWalls();
 
-        createSetsForEachCell();
+        createSetForEachCell();
 
         Cell controlCell = cellForest.keySet().iterator().next(); //controlCell to check if all cells are in single set
         while (cellForest.get(controlCell).size() != grid.getNumberOfCells()) {
