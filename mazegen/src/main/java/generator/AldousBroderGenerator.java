@@ -16,8 +16,9 @@ public class AldousBroderGenerator extends Generator {
 
     @Override
     public Grid generateMaze() {
-        Cell activeCell = grid.getRandomCell();
         HashSet<Cell> visitedCell = new HashSet<>();
+
+        Cell activeCell = grid.getRandomCell();
         activeCell.visitCell();
         visitedCell.add(activeCell);
 

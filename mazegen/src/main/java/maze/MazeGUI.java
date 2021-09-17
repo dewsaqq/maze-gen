@@ -26,8 +26,8 @@ public class MazeGUI {
 //            generator = new AldousBroderGenerator(size);
 //            generator = new KruskalGenerator(size);
 //            generator = new PrimGenerator(size);
-//            generator = new BoruvkaGenerator(size);
-            generator = new WilsonGenerator(size);
+            generator = new BoruvkaGenerator(size);
+//            generator = new WilsonGenerator(size);
             Grid grid = generator.generateMaze();
             Maze maze = new Maze(grid); // Constructs the maze object
             System.out.println(grid);

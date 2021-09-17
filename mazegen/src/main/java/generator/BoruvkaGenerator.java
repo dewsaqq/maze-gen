@@ -19,13 +19,13 @@ public class BoruvkaGenerator extends SetBasedGenerator {
 
     @Override
     public Grid generateMaze() {
-        List<HashSet<Cell>> distinctSets = getDistinctCellSets();
+        List<HashSet<Cell>> distinctSets;
 
         createSetForEachCell();
+        distinctSets = getDistinctCellSets();
 
         while (distinctSets.size() != 1) {
             HashSet<Wall> wallsToOpen = new HashSet<>();
-            System.out.println(distinctSets.size());
 
             for (HashSet<Cell> cellTree : distinctSets) {
                 Wall selectedWall = null;

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class Cell {
     private final HashMap<WallPosition, Wall> walls;
     private boolean isVisited = false;
