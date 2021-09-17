@@ -21,7 +21,7 @@ public class PrimGenerator extends Generator {
     public Grid generateMaze() {
         HashSet<Cell> visitedCells = new HashSet<>();
         Cell activeCell = grid.getRandomCell();
-        ArrayList<Wall> wallsToCheck = new ArrayList<>(activeCell.getAllWalls());
+        ArrayList<Wall> wallsToCheck = new ArrayList<>(activeCell.getWalls());
         visitedCells.add(activeCell);
 
         while (visitedCells.size() != grid.getNumberOfCells()) {

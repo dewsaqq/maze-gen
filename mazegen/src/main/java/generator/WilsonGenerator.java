@@ -5,9 +5,7 @@ import maze.Cell;
 import maze.Grid;
 import maze.Wall;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class WilsonGenerator extends Generator {
     public WilsonGenerator(int size) {
@@ -23,39 +21,44 @@ public class WilsonGenerator extends Generator {
         List<Cell> unvisitedCells = grid.getCellsList();
         HashSet<Cell> visitedCells = new HashSet<>();
 
-        Cell activeCell = CollectionHelper.getRandomListElement(unvisitedCells);
-        visitedCells.add(activeCell);
-        unvisitedCells.remove(activeCell);
+        Cell firstRandomCell = CollectionHelper.getRandomListElement(unvisitedCells);
+        visitedCells.add(firstRandomCell);
+        unvisitedCells.remove(firstRandomCell);
 
         while (visitedCells.size() != grid.getNumberOfCells()) {
-            HashMap<Cell, Wall> path = new HashMap<>();
-            activeCell = CollectionHelper.getRandomListElement(unvisitedCells);
+            Cell activeCell = CollectionHelper.getRandomListElement(unvisitedCells);
+            HashMap<Cell, Wall> randomWalkPath = generateRandomWalk(activeCell, visitedCells);
 
-            Wall selectedWall = activeCell.getRandomWall();
-            path.put(activeCell, selectedWall);
-
-            Cell selectedCell = selectedWall.getAdjacentCell(activeCell);
-
-            while (!visitedCells.contains(selectedCell)) {
-                selectedWall = selectedCell.getRandomWall();
-                path.put(selectedCell, selectedWall);
-
-                selectedCell = selectedWall.getAdjacentCell(selectedCell);
-            }
-
-            while (!activeCell.equals(selectedCell)) {
-                Wall wallToOpen = path.get(activeCell);
-                wallToOpen.openWall();
+            while (!visitedCells.contains(activeCell)) {
+                Wall selectedWall = randomWalkPath.get(activeCell);
+                selectedWall.openWall();
 
                 visitedCells.add(activeCell);
                 unvisitedCells.remove(activeCell);
 
-                activeCell = wallToOpen.getAdjacentCell(activeCell);
-
+                activeCell = selectedWall.getAdjacentCell(activeCell);
             }
 
         }
 
         return grid;
+    }
+
+    private HashMap<Cell, Wall> generateRandomWalk(Cell startCell, Set<Cell> stopCells) {
+        HashMap<Cell, Wall> randomWalk = new HashMap<>();
+
+        Wall randomWall = startCell.getRandomWall();
+        randomWalk.put(startCell, randomWall);
+
+        Cell nextCell = randomWall.getAdjacentCell(startCell);
+
+        while (!stopCells.contains(nextCell)) {
+            randomWall = nextCell.getRandomWall();
+            randomWalk.put(nextCell, randomWall);
+
+            nextCell = randomWall.getAdjacentCell(nextCell);
+        }
+
+        return randomWalk;
     }
 }

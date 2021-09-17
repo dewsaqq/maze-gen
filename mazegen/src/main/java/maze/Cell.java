@@ -1,15 +1,11 @@
 package maze;
 
-import generator.Generator;
 import helper.CollectionHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
-import static helper.CollectionHelper.getRandomListElement;
 
 public class Cell {
     private final HashMap<WallPosition, Wall> walls;
@@ -43,17 +39,17 @@ public class Cell {
         return null;
     }
 
+    public Wall getRandomWall() {
+        return CollectionHelper.getRandomListElement(new ArrayList<>(walls.values()));
+    }
+
     public Wall getRandomClosedWall() {
         ArrayList<Wall> closedWalls = getClosedWalls();
         if (closedWalls.isEmpty()) return null;
         return CollectionHelper.getRandomListElement(closedWalls);
     }
 
-    public Wall getRandomWall() {
-        return CollectionHelper.getRandomListElement(new ArrayList<>(walls.values()));
-    }
-
-    public Collection<Wall> getAllWalls() {
+    public Collection<Wall> getWalls() {
         return walls.values();
     }
 

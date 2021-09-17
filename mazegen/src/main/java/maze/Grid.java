@@ -83,7 +83,7 @@ public class Grid {
     public ArrayList<Cell> getNeighbours(Cell cell) {
         ArrayList<Cell> cellNeighbours = new ArrayList<>();
 
-        for (Wall wall : cell.getAllWalls()) {
+        for (Wall wall : cell.getWalls()) {
             cellNeighbours.add(wall.getAdjacentCell(cell));
         }
 
@@ -93,7 +93,7 @@ public class Grid {
     public ArrayList<Cell> getUnvisitedNeighbours(Cell cell) {
         ArrayList<Cell> cellUnvisitedNeighbours = new ArrayList<>();
 
-        for (Wall wall : cell.getAllWalls()) {
+        for (Wall wall : cell.getWalls()) {
             Cell neighbour = wall.getAdjacentCell(cell);
             if (!neighbour.isVisited()) cellUnvisitedNeighbours.add(neighbour);
         }
