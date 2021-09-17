@@ -22,23 +22,23 @@ public class MazeGUI {
             int size = 30;
 
             Generator generator;
-//            generator = new RecursiveBacktrackerGenerator(size);
-//            generator = new AldousBroderGenerator(size);
-//            generator = new KruskalGenerator(size);
-//            generator = new PrimGenerator(size);
-            generator = new BoruvkaGenerator(size);
-//            generator = new WilsonGenerator(size);
-            Grid grid = generator.generateMaze();
-            Maze maze = new Maze(grid); // Constructs the maze object
-            System.out.println(grid);
+//            generator = new RecursiveBacktrackerGenerator();
+//            generator = new AldousBroderGenerator();
+//            generator = new KruskalGenerator();
+//            generator = new PrimGenerator();
+            generator = new BoruvkaGenerator();
+//            generator = new WilsonGenerator();
+            Maze maze = generator.generateMaze(new Grid(size));
+            MyMaze myMaze = new MyMaze(maze.getGrid()); // Constructs the maze object
+            System.out.println(maze.getGrid());
 
             JFrame frame = new JFrame("Maze");
-            MazePanel panel = new MazePanel(maze); // Constructs the panel to hold the
+            MazePanel panel = new MazePanel(myMaze); // Constructs the panel to hold the
             // maze
             JScrollPane scrollPane = new JScrollPane(panel);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(maze.windowSize().width, maze.windowSize().height);
+            frame.setSize(myMaze.windowSize().width, myMaze.windowSize().height);
             frame.add(scrollPane, BorderLayout.CENTER);
             frame.setVisible(true);
         } catch (NumberFormatException exception) {
@@ -47,12 +47,92 @@ public class MazeGUI {
     }
 }
 
+class MyMaze {
+    public static final int CELL_WIDTH = 20; // maze square size
+    public static final int MARGIN = 50; // buffer between window edge and maze
+    private final Grid grid;
+
+    public MyMaze(int size) {
+        grid = new Grid(size);
+    }
+
+    public MyMaze(Grid grid) {
+        this.grid = grid;
+    }
+
+    public void draw(Graphics g) // draws a maze and its solution
+    {
+        g.setColor(Color.BLACK);
+        for (int i = 0; i < grid.getWidth(); i++) {
+            //north
+            g.drawLine((i * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN),
+                    ((i + 1) * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN));
+
+            //south
+            g.drawLine(i * CELL_WIDTH + MARGIN, grid.getHeight() * CELL_WIDTH
+                    + MARGIN, (i + 1) * CELL_WIDTH + MARGIN, grid.getHeight() * CELL_WIDTH
+                    + MARGIN);
+        }
+        for (int j = 0; j < grid.getHeight(); j++) {
+            //east
+            g.drawLine((grid.getWidth()) * CELL_WIDTH + MARGIN, j * CELL_WIDTH
+                    + MARGIN, (grid.getWidth()) * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
+                    + MARGIN);
+
+            //west
+            g.drawLine(0 * CELL_WIDTH + MARGIN, j * CELL_WIDTH + MARGIN, 0
+                    * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH + MARGIN);
+        }
+
+        for (int i = 0; i < grid.getWidth(); i++) {
+            for (int j = 0; j < grid.getHeight(); j++) {
+                if (grid.getCell(j, i).getWall(WallPosition.NORTH) != null && !grid.getCell(j, i).getWall(WallPosition.NORTH).isOpen()) // if there exists a wall to the
+                // north
+                {
+                    g.drawLine((i * CELL_WIDTH + MARGIN), (j * CELL_WIDTH + MARGIN),
+                            ((i + 1) * CELL_WIDTH + MARGIN), (j * CELL_WIDTH + MARGIN));
+                }
+
+                if (grid.getCell(j, i).getWall(WallPosition.SOUTH) != null && !grid.getCell(j, i).getWall(WallPosition.SOUTH).isOpen()) // if there exists a wall to the
+                // south
+                {
+                    g.drawLine(i * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
+                            + MARGIN, (i + 1) * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
+                            + MARGIN);
+                }
+
+                if (grid.getCell(j, i).getWall(WallPosition.EAST) != null && !grid.getCell(j, i).getWall(WallPosition.EAST).isOpen()) // if there exists a wall to the
+                // east
+                {
+                    g.drawLine((i + 1) * CELL_WIDTH + MARGIN, j * CELL_WIDTH
+                            + MARGIN, (i + 1) * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
+                            + MARGIN);
+                }
+
+                if (grid.getCell(j, i).getWall(WallPosition.WEST) != null && !grid.getCell(j, i).getWall(WallPosition.WEST).isOpen()) // if there exists a wall to the
+                // west
+                {
+                    g.drawLine(i * CELL_WIDTH + MARGIN, j * CELL_WIDTH + MARGIN, i
+                            * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH + MARGIN);
+                }
+            }
+        }
+    }
+
+    public Dimension windowSize() // returns the ideal size of the window (for
+    // JScrollPanes)
+    {
+        return new Dimension(grid.getWidth() * CELL_WIDTH + MARGIN * 2, grid.getHeight() * CELL_WIDTH + MARGIN
+                * 2);
+    }
+}
+
 // This is the JPanel replacement for mazes that stores as a data
 // element the maze and calls the mazes's drawing function
 class MazePanel extends JPanel {
-    private Maze maze; // the maze object
+    private MyMaze maze; // the maze object
 
-    public MazePanel(Maze theMaze) {
+    public MazePanel(MyMaze theMaze) {
         maze = theMaze;
     }
 

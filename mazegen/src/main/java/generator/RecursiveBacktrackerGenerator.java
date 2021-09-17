@@ -2,20 +2,13 @@ package generator;
 
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 
 import java.util.Stack;
 
 public class RecursiveBacktrackerGenerator extends Generator {
-    public RecursiveBacktrackerGenerator(int size) {
-        super(size);
-    }
-
-    public RecursiveBacktrackerGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
         Stack<Cell> cellTracker = new Stack<>();
 
         Cell activeCell = grid.getRandomCell();
@@ -34,6 +27,6 @@ public class RecursiveBacktrackerGenerator extends Generator {
             cellTracker.push(nextCell);
         }
 
-        return grid;
+        return new Maze(grid);
     }
 }

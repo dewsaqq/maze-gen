@@ -5,20 +5,13 @@ import maze.Cell;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public abstract class SetBasedGenerator extends Generator {
-    protected final HashMap<Cell, HashSet<Cell>> cellForest = new HashMap<>();
+    protected HashMap<Cell, HashSet<Cell>> cellForest;
 
-    public SetBasedGenerator(int size) {
-        super(size);
-    }
-
-    public SetBasedGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
-    protected void createSetForEachCell() {
-        for (Cell cell : grid.getCellsList()) {
+    protected void createSetForEachCell(List<Cell> cells) {
+        for (Cell cell : cells) {
             cellForest.put(cell, new HashSet<>(Collections.singletonList(cell)));
         }
     }

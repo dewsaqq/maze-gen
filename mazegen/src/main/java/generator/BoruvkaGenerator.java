@@ -3,25 +3,19 @@ package generator;
 import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 import maze.Wall;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoruvkaGenerator extends SetBasedGenerator {
-    public BoruvkaGenerator(int size) {
-        super(size);
-    }
-
-    public BoruvkaGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
+        cellForest = new HashMap<>();
         List<HashSet<Cell>> distinctSets;
 
-        createSetForEachCell();
+        createSetForEachCell(grid.getCellsList());
         distinctSets = getDistinctCellSets();
 
         while (distinctSets.size() != 1) {
@@ -43,7 +37,7 @@ public class BoruvkaGenerator extends SetBasedGenerator {
             distinctSets = getDistinctCellSets();
         }
 
-        return grid;
+        return new Maze(grid);
     }
 
     private boolean isWallWithinSingleSet(Wall wall) {

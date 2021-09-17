@@ -3,22 +3,15 @@ package generator;
 import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 import maze.Wall;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class PrimGenerator extends Generator {
-    public PrimGenerator(int size) {
-        super(size);
-    }
-
-    public PrimGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
         HashSet<Cell> visitedCells = new HashSet<>();
         Cell activeCell = grid.getRandomCell();
         ArrayList<Wall> wallsToCheck = new ArrayList<>(activeCell.getWalls());
@@ -45,6 +38,6 @@ public class PrimGenerator extends Generator {
             }
         }
 
-        return grid;
+        return new Maze(grid);
     }
 }

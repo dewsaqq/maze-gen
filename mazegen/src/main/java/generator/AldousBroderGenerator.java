@@ -2,20 +2,13 @@ package generator;
 
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 
 import java.util.HashSet;
 
 public class AldousBroderGenerator extends Generator {
-    public AldousBroderGenerator(int size) {
-        super(size);
-    }
-
-    public AldousBroderGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
         HashSet<Cell> visitedCell = new HashSet<>();
 
         Cell activeCell = grid.getRandomCell();
@@ -35,6 +28,6 @@ public class AldousBroderGenerator extends Generator {
             nextCell = grid.getRandomNeighbour(activeCell);
         }
 
-        return grid;
+        return new Maze(grid);
     }
 }

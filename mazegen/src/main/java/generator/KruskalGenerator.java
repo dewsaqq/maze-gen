@@ -3,24 +3,18 @@ package generator;
 import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 import maze.Wall;
 
 import java.util.*;
 
 public class KruskalGenerator extends SetBasedGenerator {
-    public KruskalGenerator(int size) {
-        super(size);
-    }
-
-    public KruskalGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
+        cellForest = new HashMap<>();
         ArrayList<Wall> walls = grid.getWalls();
 
-        createSetForEachCell();
+        createSetForEachCell(grid.getCellsList());
 
         Cell controlCell = cellForest.keySet().iterator().next(); //controlCell to check if all cells are in single set
         while (cellForest.get(controlCell).size() != grid.getNumberOfCells()) {
@@ -37,6 +31,6 @@ public class KruskalGenerator extends SetBasedGenerator {
             walls.remove(drawnWall);
         }
 
-        return grid;
+        return new Maze(grid);
     }
 }

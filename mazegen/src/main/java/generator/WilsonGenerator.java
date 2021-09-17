@@ -3,6 +3,7 @@ package generator;
 import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
+import maze.Maze;
 import maze.Wall;
 
 import java.util.*;
@@ -11,16 +12,8 @@ public class WilsonGenerator extends Generator {
     private List<Cell> unvisitedCells;
     private HashSet<Cell> visitedCells;
 
-    public WilsonGenerator(int size) {
-        this(size, size);
-    }
-
-    public WilsonGenerator(int gridHeight, int gridWidth) {
-        super(gridHeight, gridWidth);
-    }
-
     @Override
-    public Grid generateMaze() {
+    public Maze generateMaze(Grid grid) {
         unvisitedCells = grid.getCellsList();
         visitedCells = new HashSet<>();
 
@@ -33,7 +26,7 @@ public class WilsonGenerator extends Generator {
             openWallsFromRandomWalk(randomWalkPath, activeCell);
         }
 
-        return grid;
+        return new Maze(grid);
     }
 
     private HashMap<Cell, Wall> generateRandomWalk(Cell startCell) {
