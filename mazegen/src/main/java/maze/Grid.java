@@ -2,10 +2,7 @@ package maze;
 
 import helper.CollectionHelper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Grid {
@@ -121,6 +118,12 @@ public class Grid {
 
     public ArrayList<Wall> getWalls() {
         return walls;
+    }
+
+    public List<Wall> getClosedWalls() {
+        return getWalls().stream()
+                .filter(w -> !w.isOpen())
+                .collect(Collectors.toList());
     }
 
     public List<Cell> getCellsList() {

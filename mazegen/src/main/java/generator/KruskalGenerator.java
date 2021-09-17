@@ -1,31 +1,33 @@
 package generator;
 
-import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 import maze.Maze;
 import maze.Wall;
+import org.jgrapht.alg.util.UnionFind;
 
 import java.util.*;
 
-public class KruskalGenerator extends SetBasedGenerator {
+public class KruskalGenerator extends Generator {
     @Override
     public Maze generateMaze(Grid grid) {
-        cellForest = new HashMap<>();
-        ArrayList<Wall> walls = grid.getWalls();
+        UnionFind<Cell> cellForest = new UnionFind<>(Collections.emptySet());
+        List<Wall> walls = grid.getWalls();
+        Collections.shuffle(walls);
 
-        createSetForEachCell(grid.getCellsList());
+        for (Cell cell : grid.getCellsList()) {
+            cellForest.addElement(cell);
+        }
 
-        Cell controlCell = cellForest.keySet().iterator().next(); //controlCell to check if all cells are in single set
-        while (cellForest.get(controlCell).size() != grid.getNumberOfCells()) {
-            Wall drawnWall = CollectionHelper.getRandomListElement(walls);
+        while (cellForest.numberOfSets() != 1) {
+            Wall drawnWall = walls.get(0);
             ArrayList<Cell> adjacentCells = drawnWall.getAdjacentCells();
             Cell firstCell = adjacentCells.get(0);
             Cell secondCell = adjacentCells.get(1);
 
-            if (!areCellsInSingleSet(firstCell, secondCell)) {
+            if (!cellForest.inSameSet(firstCell, secondCell)) {
                 drawnWall.openWall();
-                unionSets(firstCell, secondCell);
+                cellForest.union(firstCell, secondCell);
             }
 
             walls.remove(drawnWall);

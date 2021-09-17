@@ -9,7 +9,6 @@ public class GenerationTimeAnalyzer extends Analyzer {
         for (Integer mazeSize : MAZE_SIZES) {
             System.out.println("MAZE SIZE: " + mazeSize);
             for (Generator generator : GENERATORS) {
-//                System.out.println(generator.getClass().getName().split("\\.")[1]);
                 generatorAnalysis(generator, mazeSize);
             }
         }

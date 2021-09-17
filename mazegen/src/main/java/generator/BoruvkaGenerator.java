@@ -1,70 +1,59 @@
 package generator;
 
-import helper.CollectionHelper;
 import maze.Cell;
 import maze.Grid;
 import maze.Maze;
 import maze.Wall;
+import org.jgrapht.alg.util.UnionFind;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class BoruvkaGenerator extends SetBasedGenerator {
+public class BoruvkaGenerator extends Generator {
     @Override
     public Maze generateMaze(Grid grid) {
-        cellForest = new HashMap<>();
-        List<HashSet<Cell>> distinctSets;
+        UnionFind<Cell> cellForest = new UnionFind<>(Collections.emptySet());
+        Map<Cell, Wall> wallsToOpen = new LinkedHashMap<>();
+        List<Wall> walls;
 
-        createSetForEachCell(grid.getCellsList());
-        distinctSets = getDistinctCellSets();
+        for (Cell cell : grid.getCellsList()) {
+            cellForest.addElement(cell);
+        }
 
-        while (distinctSets.size() != 1) {
-            HashSet<Wall> wallsToOpen = new HashSet<>();
+        do {
+            wallsToOpen.clear();
+            walls = grid.getClosedWalls();
+            for (Wall wall : walls) {
+                ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
+                Cell firstCell = adjacentCells.get(0);
+                Cell secondCell = adjacentCells.get(1);
 
-            for (HashSet<Cell> cellTree : distinctSets) {
-                Wall selectedWall = null;
-
-                while (selectedWall == null) {
-                    Cell selectedCell = CollectionHelper.getRandomSetElement(cellTree);
-                    selectedWall = selectedCell.getRandomClosedWall();
-                    if (isWallWithinSingleSet(selectedWall)) selectedWall = null;
+                if (cellForest.inSameSet(firstCell, secondCell)) {
+                    continue;
                 }
 
-                wallsToOpen.add(selectedWall);
+                if (wallsToOpen.get(firstCell) == null) {
+                    wallsToOpen.put(firstCell, firstCell.getRandomClosedWall());
+                }
+
+                if (wallsToOpen.get(secondCell) == null) {
+                    wallsToOpen.put(secondCell, secondCell.getRandomClosedWall());
+                }
             }
 
-            openSelectedWalls(wallsToOpen);
-            distinctSets = getDistinctCellSets();
-        }
+            for (Wall wall : wallsToOpen.values()) {
+                ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
+                Cell firstCell = adjacentCells.get(0);
+                Cell secondCell = adjacentCells.get(1);
+
+                if (cellForest.inSameSet(firstCell, secondCell)) {
+                    continue;
+                }
+
+                wall.openWall();
+                cellForest.union(firstCell, secondCell);
+            }
+        } while(cellForest.numberOfSets() != 1);
 
         return new Maze(grid);
-    }
-
-    private boolean isWallWithinSingleSet(Wall wall) {
-        if (wall == null) return false;
-        ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
-        Cell firstCell = adjacentCells.get(0);
-        Cell secondCell = adjacentCells.get(1);
-
-        return areCellsInSingleSet(firstCell, secondCell);
-    }
-
-    private void openSelectedWalls(HashSet<Wall> walls) {
-        for (Wall wall : walls) {
-            ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
-            Cell firstCell = adjacentCells.get(0);
-            Cell secondCell = adjacentCells.get(1);
-
-            if (!areCellsInSingleSet(firstCell, secondCell)) {
-                wall.openWall();
-                unionSets(firstCell, secondCell);
-            }
-        }
-    }
-
-    private List<HashSet<Cell>> getDistinctCellSets() {
-        return cellForest.values().stream()
-                .distinct()
-                .collect(Collectors.toList());
     }
 }
