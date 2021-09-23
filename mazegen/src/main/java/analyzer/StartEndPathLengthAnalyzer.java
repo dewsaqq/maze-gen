@@ -5,8 +5,8 @@ import graph.MazeGraph;
 import maze.Grid;
 import maze.Maze;
 
-public class StartEndPathLength extends Analyzer {
-    public StartEndPathLength() {
+public class StartEndPathLengthAnalyzer extends Analyzer {
+    public StartEndPathLengthAnalyzer() {
         super();
     }
 

@@ -12,7 +12,7 @@ public class KruskalGenerator extends Generator {
     @Override
     public Maze generateMaze(Grid grid) {
         UnionFind<Cell> cellForest = new UnionFind<>(Collections.emptySet());
-        List<Wall> walls = grid.getWalls();
+        List<Wall> walls = new ArrayList<>(grid.getWalls());
         Collections.shuffle(walls);
 
         for (Cell cell : grid.getCellsList()) {

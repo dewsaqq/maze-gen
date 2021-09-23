@@ -9,6 +9,7 @@ import java.util.*;
 public abstract class Analyzer {
     protected static final int NUMBER_OF_ITERATIONS = 100;
     private static final int WARMUP_SIZE = 10;
+    private static final int ROUND_PRECISION = 2;
     protected boolean isWarmUpRequired = false;
 
     protected static final List<Integer> MAZE_SIZES = Arrays.asList(16, 32, 64, 128, 256);
@@ -38,7 +39,7 @@ public abstract class Analyzer {
         }
         long endTime = System.nanoTime();
         System.out.println("Execution time (seconds): " + (endTime - startTime)/1000000000.0);
-    };
+    }
 
     public abstract double generatorAnalysis(Generator generator, int mazeSize);
 
@@ -62,7 +63,7 @@ public abstract class Analyzer {
                         .mapToDouble(d -> d)
                         .average()
                         .orElse(0.0);
-                generatorMeanValue.put(size, round(mean, 2));
+                generatorMeanValue.put(size, round(mean));
             }
             resultsMean.put(generator, generatorMeanValue);
         }
@@ -76,8 +77,9 @@ public abstract class Analyzer {
         for (Generator generator : GENERATORS) {
             System.out.println(generator.getClass().getSimpleName());
             System.out.println(resultsMean.get(generator));
-            System.out.println();
         }
+
+        System.out.println();
     }
 
     private void initializeResultMap() {
@@ -91,11 +93,9 @@ public abstract class Analyzer {
         }
     }
 
-    private double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
+    private double round(double value) {
         BigDecimal bd = new BigDecimal(Double.toString(value));
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(ROUND_PRECISION, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 }

@@ -26,21 +26,21 @@ public class MazeGUI {
             Generator generator;
 //            generator = new RecursiveBacktrackerGenerator();
 //            generator = new AldousBroderGenerator();
-//            generator = new KruskalGenerator();
+            generator = new KruskalGenerator();
 //            generator = new PrimGenerator();
-            generator = new BoruvkaGenerator();
+//            generator = new BoruvkaGenerator();
 //            generator = new WilsonGenerator();
             Maze maze = generator.generateMaze(new Grid(size));
             MyMaze myMaze = new MyMaze(maze.getGrid()); // Constructs the maze object
             System.out.println(maze.getGrid());
-            MazeGraph mazeGraph = new MazeGraph(maze);
-            System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
-            System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
+//            MazeGraph mazeGraph = new MazeGraph(maze);
+//            System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
+//            System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
 //            System.out.println(mazeGraph.getLongestPathLength() + " Longest path");
-            System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
-            System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
-            System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
-            System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
+//            System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
+//            System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
+//            System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
+//            System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
 
 
 
