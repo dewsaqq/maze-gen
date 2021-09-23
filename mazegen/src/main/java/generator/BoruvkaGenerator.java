@@ -12,7 +12,7 @@ public class BoruvkaGenerator extends Generator {
     @Override
     public Maze generateMaze(Grid grid) {
         UnionFind<Cell> cellForest = new UnionFind<>(Collections.emptySet());
-        Map<Cell, Wall> wallsToOpen = new LinkedHashMap<>();
+        Map<Cell, Wall> chosenWalls = new HashMap<>();
         List<Wall> walls;
 
         for (Cell cell : grid.getCellsList()) {
@@ -20,7 +20,7 @@ public class BoruvkaGenerator extends Generator {
         }
 
         do {
-            wallsToOpen.clear();
+            chosenWalls.clear();
             walls = grid.getClosedWalls();
             for (Wall wall : walls) {
                 ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
@@ -31,16 +31,19 @@ public class BoruvkaGenerator extends Generator {
                     continue;
                 }
 
-                if (wallsToOpen.get(firstCell) == null) {
-                    wallsToOpen.put(firstCell, firstCell.getRandomClosedWall());
+                if (chosenWalls.get(firstCell) == null) {
+                    chosenWalls.put(firstCell, firstCell.getRandomClosedWall());
                 }
 
-                if (wallsToOpen.get(secondCell) == null) {
-                    wallsToOpen.put(secondCell, secondCell.getRandomClosedWall());
+                if (chosenWalls.get(secondCell) == null) {
+                    chosenWalls.put(secondCell, secondCell.getRandomClosedWall());
                 }
             }
 
-            for (Wall wall : wallsToOpen.values()) {
+            List<Wall> wallsToOpen = new ArrayList<>(chosenWalls.values());
+            Collections.shuffle(wallsToOpen);
+
+            for (Wall wall : wallsToOpen) {
                 ArrayList<Cell> adjacentCells = wall.getAdjacentCells();
                 Cell firstCell = adjacentCells.get(0);
                 Cell secondCell = adjacentCells.get(1);
