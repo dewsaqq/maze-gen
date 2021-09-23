@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class Wall {
     private final ArrayList<Cell> adjacentCells;
+    private final Orientation orientation;
     private boolean isOpen = false;
 
-    public Wall(Cell firstCell, Cell secondCell) {
+    public Wall(Cell firstCell, Cell secondCell, Orientation orientation) {
+        this.orientation = orientation;
         adjacentCells = new ArrayList<>();
         adjacentCells.add(firstCell);
         adjacentCells.add(secondCell);
@@ -25,7 +27,23 @@ public class Wall {
         else return adjacentCells.get(0);
     }
 
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
     public boolean isOpen() {
         return isOpen;
+    }
+
+    enum Position {
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST
+    }
+
+    public enum Orientation {
+        HORIZONTAL,
+        VERTICAL
     }
 }

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Cell {
-    private final HashMap<WallPosition, Wall> walls;
+    private final HashMap<Wall.Position, Wall> walls;
     private boolean isVisited = false;
 
     public Cell() {
         walls = new HashMap<>();
     }
 
-    public void addWall(WallPosition position, Wall wall) {
+    public void addWall(Wall.Position position, Wall wall) {
         walls.put(position, wall);
     }
 
@@ -28,7 +28,7 @@ public class Cell {
         return walls.values();
     }
 
-    public Wall getWall(WallPosition position) {
+    public Wall getWall(Wall.Position position) {
         return walls.get(position);
     }
 

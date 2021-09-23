@@ -58,21 +58,25 @@ public class Grid {
     }
 
     private void createVerticalWall(Cell firstCell, Cell secondCell) {
-        Wall verticalWall = new Wall(firstCell, secondCell);
+        Wall verticalWall = new Wall(firstCell, secondCell, Wall.Orientation.VERTICAL);
         walls.add(verticalWall);
-        firstCell.addWall(WallPosition.EAST, verticalWall);
-        secondCell.addWall(WallPosition.WEST, verticalWall);
+        firstCell.addWall(Wall.Position.EAST, verticalWall);
+        secondCell.addWall(Wall.Position.WEST, verticalWall);
     }
 
     private void createHorizontalWall(Cell firstCell, Cell secondCell) {
-        Wall horizontalWall = new Wall(firstCell, secondCell);
+        Wall horizontalWall = new Wall(firstCell, secondCell, Wall.Orientation.HORIZONTAL);
         walls.add(horizontalWall);
-        firstCell.addWall(WallPosition.SOUTH, horizontalWall);
-        secondCell.addWall(WallPosition.NORTH, horizontalWall);
+        firstCell.addWall(Wall.Position.SOUTH, horizontalWall);
+        secondCell.addWall(Wall.Position.NORTH, horizontalWall);
     }
 
     public Cell getCell(int row, int column) {
         return cells[row][column];
+    }
+
+    public Cell[][] getCells() {
+        return cells;
     }
 
     public Cell getRandomCell() {
@@ -126,6 +130,12 @@ public class Grid {
                 .collect(Collectors.toList());
     }
 
+    public List<Wall> getOpenWalls() {
+        return getWalls().stream()
+                .filter(Wall::isOpen)
+                .collect(Collectors.toList());
+    }
+
     public List<Cell> getCellsList() {
         return Arrays.stream(cells)
                 .flatMap(Arrays::stream)
@@ -143,7 +153,7 @@ public class Grid {
             gridString.append("#");
             for (int j = 0; j < width; j++) {
                 gridString.append(" ");
-                if (cells[i][j].getWall(WallPosition.EAST) != null && cells[i][j].getWall(WallPosition.EAST).isOpen())
+                if (cells[i][j].getWall(Wall.Position.EAST) != null && cells[i][j].getWall(Wall.Position.EAST).isOpen())
                     gridString.append(" ");
                 else gridString.append("#");
             }
@@ -151,7 +161,7 @@ public class Grid {
 
             for (int j = 0; j < width; j++) {
                 gridString.append("#");
-                if (cells[i][j].getWall(WallPosition.SOUTH) != null && cells[i][j].getWall(WallPosition.SOUTH).isOpen())
+                if (cells[i][j].getWall(Wall.Position.SOUTH) != null && cells[i][j].getWall(Wall.Position.SOUTH).isOpen())
                     gridString.append(" ");
                 else gridString.append("#");
             }

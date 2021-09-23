@@ -11,6 +11,8 @@ package maze;
 
 
 import generator.*;
+import graph.MazeGraph;
+import org.jgrapht.GraphMetrics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +21,7 @@ import java.io.*;
 public class MazeGUI {
     public static void main(String[] args) throws IOException, InterruptedException {
         try {
-            int size = 30;
+            int size = 50;
 
             Generator generator;
 //            generator = new RecursiveBacktrackerGenerator();
@@ -31,6 +33,16 @@ public class MazeGUI {
             Maze maze = generator.generateMaze(new Grid(size));
             MyMaze myMaze = new MyMaze(maze.getGrid()); // Constructs the maze object
             System.out.println(maze.getGrid());
+            MazeGraph mazeGraph = new MazeGraph(maze);
+            System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
+            System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
+//            System.out.println(mazeGraph.getLongestPathLength() + " Longest path");
+            System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
+            System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
+            System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
+            System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
+
+
 
             JFrame frame = new JFrame("Maze");
             MazePanel panel = new MazePanel(myMaze); // Constructs the panel to hold the
@@ -86,14 +98,14 @@ class MyMaze {
 
         for (int i = 0; i < grid.getWidth(); i++) {
             for (int j = 0; j < grid.getHeight(); j++) {
-                if (grid.getCell(j, i).getWall(WallPosition.NORTH) != null && !grid.getCell(j, i).getWall(WallPosition.NORTH).isOpen()) // if there exists a wall to the
+                if (grid.getCell(j, i).getWall(Wall.Position.NORTH) != null && !grid.getCell(j, i).getWall(Wall.Position.NORTH).isOpen()) // if there exists a wall to the
                 // north
                 {
                     g.drawLine((i * CELL_WIDTH + MARGIN), (j * CELL_WIDTH + MARGIN),
                             ((i + 1) * CELL_WIDTH + MARGIN), (j * CELL_WIDTH + MARGIN));
                 }
 
-                if (grid.getCell(j, i).getWall(WallPosition.SOUTH) != null && !grid.getCell(j, i).getWall(WallPosition.SOUTH).isOpen()) // if there exists a wall to the
+                if (grid.getCell(j, i).getWall(Wall.Position.SOUTH) != null && !grid.getCell(j, i).getWall(Wall.Position.SOUTH).isOpen()) // if there exists a wall to the
                 // south
                 {
                     g.drawLine(i * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH
@@ -101,7 +113,7 @@ class MyMaze {
                             + MARGIN);
                 }
 
-                if (grid.getCell(j, i).getWall(WallPosition.EAST) != null && !grid.getCell(j, i).getWall(WallPosition.EAST).isOpen()) // if there exists a wall to the
+                if (grid.getCell(j, i).getWall(Wall.Position.EAST) != null && !grid.getCell(j, i).getWall(Wall.Position.EAST).isOpen()) // if there exists a wall to the
                 // east
                 {
                     g.drawLine((i + 1) * CELL_WIDTH + MARGIN, j * CELL_WIDTH
@@ -109,7 +121,7 @@ class MyMaze {
                             + MARGIN);
                 }
 
-                if (grid.getCell(j, i).getWall(WallPosition.WEST) != null && !grid.getCell(j, i).getWall(WallPosition.WEST).isOpen()) // if there exists a wall to the
+                if (grid.getCell(j, i).getWall(Wall.Position.WEST) != null && !grid.getCell(j, i).getWall(Wall.Position.WEST).isOpen()) // if there exists a wall to the
                 // west
                 {
                     g.drawLine(i * CELL_WIDTH + MARGIN, j * CELL_WIDTH + MARGIN, i
