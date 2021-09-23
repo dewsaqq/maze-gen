@@ -1,15 +1,16 @@
 package analyzer;
 
 import generator.*;
-import graph.MazeGraph;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
 public abstract class Analyzer {
-    protected static Map<Generator, Map<Integer, ArrayList<Double>>> RESULTS;
     protected static final int NUMBER_OF_ITERATIONS = 100;
+    private static final int WARMUP_SIZE = 10;
+    protected boolean isWarmUpRequired = false;
+
     protected static final List<Integer> MAZE_SIZES = Arrays.asList(16, 32, 64, 128, 256);
     protected static final List<Generator> GENERATORS = Arrays.asList(
             new RecursiveBacktrackerGenerator(),
@@ -19,12 +20,37 @@ public abstract class Analyzer {
             new WilsonGenerator(),
             new BoruvkaGenerator()
     );
+    protected static Map<Generator, Map<Integer, ArrayList<Double>>> RESULTS;
 
     protected Analyzer() {
         initializeResultMap();
     }
 
-    public abstract void analyze();
+    public void analyze() {
+        if (isWarmUpRequired) warmUp();
+        long startTime = System.nanoTime();
+        for (int i = 0; i < NUMBER_OF_ITERATIONS; i++) {
+            for (Integer mazeSize : MAZE_SIZES) {
+                for (Generator generator : GENERATORS) {
+                    RESULTS.get(generator).get(mazeSize).add(generatorAnalysis(generator, mazeSize));
+                }
+            }
+        }
+        long endTime = System.nanoTime();
+        System.out.println("Execution time (seconds): " + (endTime - startTime)/1000000000.0);
+    };
+
+    public abstract double generatorAnalysis(Generator generator, int mazeSize);
+
+    private void warmUp() {
+        for (int i = 0; i < WARMUP_SIZE; i++) {
+            for (Integer mazeSize : MAZE_SIZES) {
+                for (Generator generator : GENERATORS) {
+                    generatorAnalysis(generator, mazeSize);
+                }
+            }
+        }
+    }
 
     public Map<Generator, Map<Integer, Double>> getResultsMean() {
         Map<Generator, Map<Integer, Double>> resultsMean = new LinkedHashMap<>();
