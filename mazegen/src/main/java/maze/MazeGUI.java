@@ -12,35 +12,34 @@ package maze;
 
 import generator.*;
 import graph.MazeGraph;
-import org.jgrapht.GraphMetrics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 
 public class MazeGUI {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         try {
-            int size = 50;
+            int size = 256;
 
             Generator generator;
 //            generator = new RecursiveBacktrackerGenerator();
 //            generator = new AldousBroderGenerator();
-            generator = new KruskalGenerator();
+//            generator = new KruskalGenerator();
 //            generator = new PrimGenerator();
-//            generator = new BoruvkaGenerator();
+            generator = new BoruvkaGenerator();
 //            generator = new WilsonGenerator();
             Maze maze = generator.generateMaze(new Grid(size));
             MyMaze myMaze = new MyMaze(maze.getGrid()); // Constructs the maze object
             System.out.println(maze.getGrid());
-//            MazeGraph mazeGraph = new MazeGraph(maze);
-//            System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
-//            System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
+            MazeGraph mazeGraph = new MazeGraph(maze);
+
+            System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
+            System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
 //            System.out.println(mazeGraph.getLongestPathLength() + " Longest path");
-//            System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
-//            System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
-//            System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
-//            System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
+            System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
+            System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
+            System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
+            System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
 
 
 
@@ -64,9 +63,6 @@ class MyMaze {
     public static final int MARGIN = 50; // buffer between window edge and maze
     private final Grid grid;
 
-    public MyMaze(int size) {
-        grid = new Grid(size);
-    }
 
     public MyMaze(Grid grid) {
         this.grid = grid;
@@ -77,8 +73,8 @@ class MyMaze {
         g.setColor(Color.BLACK);
         for (int i = 0; i < grid.getWidth(); i++) {
             //north
-            g.drawLine((i * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN),
-                    ((i + 1) * CELL_WIDTH + MARGIN), (0 * CELL_WIDTH + MARGIN));
+            g.drawLine((i * CELL_WIDTH + MARGIN), (MARGIN),
+                    ((i + 1) * CELL_WIDTH + MARGIN), (MARGIN));
 
             //south
             g.drawLine(i * CELL_WIDTH + MARGIN, grid.getHeight() * CELL_WIDTH
@@ -92,8 +88,7 @@ class MyMaze {
                     + MARGIN);
 
             //west
-            g.drawLine(0 * CELL_WIDTH + MARGIN, j * CELL_WIDTH + MARGIN, 0
-                    * CELL_WIDTH + MARGIN, (j + 1) * CELL_WIDTH + MARGIN);
+            g.drawLine(MARGIN, j * CELL_WIDTH + MARGIN, MARGIN, (j + 1) * CELL_WIDTH + MARGIN);
         }
 
         for (int i = 0; i < grid.getWidth(); i++) {
@@ -142,7 +137,7 @@ class MyMaze {
 // This is the JPanel replacement for mazes that stores as a data
 // element the maze and calls the mazes's drawing function
 class MazePanel extends JPanel {
-    private MyMaze maze; // the maze object
+    private final MyMaze maze; // the maze object
 
     public MazePanel(MyMaze theMaze) {
         maze = theMaze;

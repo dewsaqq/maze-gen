@@ -28,5 +28,15 @@ public class Main {
         analyzer.analyze();
         System.out.println(analyzer.getClass().getSimpleName());
         analyzer.printResults();
+
+        analyzer = new StartEndPathDifficultyAnalyzer();
+        analyzer.analyze();
+        System.out.println(analyzer.getClass().getSimpleName());
+        analyzer.printResults();
+
+        analyzer = new MazeGraphDifficultyAnalyzer();
+        analyzer.analyze();
+        System.out.println(analyzer.getClass().getSimpleName());
+        analyzer.printResults();
     }
 }

@@ -7,6 +7,7 @@ import maze.Wall;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphMetrics;
 import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.BFSShortestPath;
 import org.jgrapht.alg.shortestpath.GraphMeasurer;
@@ -37,7 +38,7 @@ public class MazeGraph {
         mazeGraph = new SimpleGraph<>(DefaultEdge.class);
         mazeDifficultyGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         initializeMazeGraph();
-        //initializeMazeDifficultyGraph();
+        initializeMazeDifficultyGraph();
     }
 
     private void initializeMazeGraph() {
@@ -70,39 +71,6 @@ public class MazeGraph {
         }
 
         constructMazeGraph();
-    }
-
-    private void initializeMazeDifficultyGraph() {
-        BFSShortestPath<Vertex, DefaultEdge> bfs = new BFSShortestPath<>(mazeGraph);
-        List<Vertex> specialTypeVertices = getSpecialTypeVertices();
-        List<GraphPath<Vertex, DefaultEdge>> graphPathsToCalculateDifficulty = new ArrayList<>();
-
-        for (int i = 0; i < specialTypeVertices.size() - 1; i++) {
-            for (int j = i + 1; j < specialTypeVertices.size(); j++) {
-                boolean fault = false;
-                GraphPath<Vertex, DefaultEdge> graphPath = bfs.getPath(specialTypeVertices.get(i), specialTypeVertices.get(j));
-                for (int k = 1; k < graphPath.getVertexList().size() - 1; k++) {
-                    if (graphPath.getVertexList().get(k).getVertexType() != Vertex.Type.PLAIN) {
-                        fault = true;
-                        break;
-                    }
-                }
-
-                if (!fault) graphPathsToCalculateDifficulty.add(graphPath);
-            }
-        }
-
-        System.out.println("1. Done");
-        for (GraphPath<Vertex, DefaultEdge> graphPath : graphPathsToCalculateDifficulty) {
-            Vertex startVertex = graphPath.getStartVertex();
-            Vertex endVertex = graphPath.getEndVertex();
-
-            mazeDifficultyGraph.addVertex(startVertex);
-            mazeDifficultyGraph.addVertex(endVertex);
-
-            DefaultWeightedEdge dwe = mazeDifficultyGraph.addEdge(startVertex, endVertex);
-            mazeDifficultyGraph.setEdgeWeight(dwe, calculatePathWeight(graphPath));
-        }
     }
 
     public double getStartEndPathLength() {
@@ -138,7 +106,6 @@ public class MazeGraph {
     }
 
     public double getLongestPathLength() {
-        long startTime = System.nanoTime();
         double diameter = Double.NEGATIVE_INFINITY;
         for(Vertex v : mazeGraph.vertexSet()) {
             ShortestPathAlgorithm<Vertex, DefaultEdge> alg = new BFSShortestPath<>(mazeGraph);
@@ -149,19 +116,7 @@ public class MazeGraph {
             }
         }
 
-        System.out.println("Graph diameter = " + diameter);
-
-
-
-//        ShortestPathAlgorithm<Vertex, DefaultEdge> alg = new BFSShortestPath<>(mazeGraph);
-//        GraphMeasurer<Vertex, DefaultEdge> gm = new GraphMeasurer<>(mazeGraph, alg);
-
-
-        long endTime = System.nanoTime();
-        System.out.println("Execution time (seconds): " + (endTime - startTime)/1000000000.0);
-//        return gm.getDiameter();
         return diameter;
-//        return GraphMetrics.getDiameter(mazeGraph) + 1.0;
     }
 
     public double getNumberOfThreeWayIntersections() {
@@ -199,12 +154,41 @@ public class MazeGraph {
                 .collect(Collectors.toList());
     }
 
-    private double calculatePathWeight(GraphPath<Vertex, DefaultEdge> graphPath) {
-        double calculatedWeight = 0.0;
-        Wall.Orientation lastOrientation = defaultEdgeWallMap.get(graphPath.getEdgeList().get(0)).getOrientation();
 
-        for (int i = 1; i < graphPath.getEdgeList().size(); i++) {
-            Wall.Orientation currentOrientation = defaultEdgeWallMap.get(graphPath.getEdgeList().get(i)).getOrientation();
+    private void initializeMazeDifficultyGraph() {
+        for (Vertex specialVertex : getSpecialTypeVertices()) {
+            mazeDifficultyGraph.addVertex(specialVertex);
+        }
+
+        for (Vertex v : getSpecialTypeVertices()) {
+            for (Vertex neighbour : Graphs.neighborListOf(mazeGraph, v)) {
+                Vertex currentV = neighbour;
+                List<Vertex> path = new ArrayList<>();
+                path.add(v);
+
+                while (currentV != null) {
+                    path.add(currentV);
+                    if (currentV.getVertexType() != Vertex.Type.PLAIN) {
+                        break;
+                    }
+                    currentV = Graphs.neighborListOf(mazeGraph, currentV).stream().filter(vertex -> !path.contains(vertex)).findFirst().orElse(null);
+                }
+
+                if (!mazeDifficultyGraph.containsEdge(path.get(0), path.get(path.size() - 1))) {
+                    DefaultWeightedEdge dwe = mazeDifficultyGraph.addEdge(path.get(0), path.get(path.size() - 1));
+                    mazeDifficultyGraph.setEdgeWeight(dwe, calculatePathWeight(path));
+                }
+            }
+        }
+    }
+
+    private double calculatePathWeight(List<Vertex> path) {
+        double calculatedWeight = 0.0;
+
+        Wall.Orientation lastOrientation = defaultEdgeWallMap.get(mazeGraph.getEdge(path.get(0), path.get(1))).getOrientation();
+
+        for (int i = 1; i < path.size() - 1; i++) {
+            Wall.Orientation currentOrientation = defaultEdgeWallMap.get(mazeGraph.getEdge(path.get(i), path.get(i + 1))).getOrientation();
             if (currentOrientation != lastOrientation) {
                 lastOrientation = currentOrientation;
                 calculatedWeight++;
