@@ -35,7 +35,7 @@ public class MazeGUI {
 
             System.out.println(mazeGraph.getStartEndPathCorridorDifficulty() + " start end difficulty");
             System.out.println(mazeGraph.getCorridorsDifficultySum() + " difficulty sum");
-//            System.out.println(mazeGraph.getLongestPathLength() + " Longest path");
+            System.out.println(mazeGraph.getLongestPathFromStartLength() + " longest path length");
             System.out.println(mazeGraph.getNumberOfDeadEnds() + " dead ends");
             System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
             System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");

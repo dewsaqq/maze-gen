@@ -15,6 +15,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +23,11 @@ import java.util.stream.Collectors;
 public class MazeGraph {
     private final Maze maze;
     private final Grid grid;
+
+    public Graph<Vertex, DefaultEdge> getMazeGraph() {
+        return mazeGraph;
+    }
+
     private final Graph<Vertex, DefaultEdge> mazeGraph;
     private final Graph<Vertex, DefaultWeightedEdge> mazeDifficultyGraph;
     private final Cell startCell;
@@ -105,20 +111,6 @@ public class MazeGraph {
                 .count();
     }
 
-    public double getLongestPathLength() {
-        double diameter = Double.NEGATIVE_INFINITY;
-        for(Vertex v : mazeGraph.vertexSet()) {
-            ShortestPathAlgorithm<Vertex, DefaultEdge> alg = new BFSShortestPath<>(mazeGraph);
-
-            ShortestPathAlgorithm.SingleSourcePaths<Vertex, DefaultEdge> paths = alg.getPaths(v);
-            for(Vertex u : mazeGraph.vertexSet()) {
-                diameter = Math.max(diameter, paths.getPath(u).getLength());
-            }
-        }
-
-        return diameter;
-    }
-
     public double getNumberOfThreeWayIntersections() {
         return mazeGraph.vertexSet().stream()
                 .filter(v -> v.getVertexType() == Vertex.Type.THREE_WAY_INTERSECTION)
@@ -196,5 +188,17 @@ public class MazeGraph {
         }
 
         return calculatedWeight;
+    }
+
+    public double getLongestPathFromStartLength() {
+        BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(mazeGraph, cellVertexMap.get(startCell));
+
+        int pathLength = iterator.getDepth(iterator.next());
+        while (iterator.hasNext()) {
+            int lengthToCheck = iterator.getDepth(iterator.next());
+            if (lengthToCheck > pathLength) pathLength = lengthToCheck;
+        }
+
+        return pathLength + 1;
     }
 }
