@@ -5,12 +5,8 @@ import maze.Grid;
 import maze.Maze;
 import maze.Wall;
 import org.jgrapht.Graph;
-import org.jgrapht.GraphMetrics;
-import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.BFSShortestPath;
-import org.jgrapht.alg.shortestpath.GraphMeasurer;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -23,10 +19,6 @@ import java.util.stream.Collectors;
 public class MazeGraph {
     private final Maze maze;
     private final Grid grid;
-
-    public Graph<Vertex, DefaultEdge> getMazeGraph() {
-        return mazeGraph;
-    }
 
     private final Graph<Vertex, DefaultEdge> mazeGraph;
     private final Graph<Vertex, DefaultWeightedEdge> mazeDifficultyGraph;
@@ -67,7 +59,7 @@ public class MazeGraph {
                 else if (row == height - 1 && column == width -1) cellVertexMap.put(cells[row][column], new Vertex(Vertex.Type.END));
                 else {
                     int numberOfClosedWalls = cells[row][column].getClosedWalls().size() + addedRowValue + addedColumnValue;
-                    if (numberOfClosedWalls == 2) cellVertexMap.put(cells[row][column], new Vertex(Vertex.Type.PLAIN));
+                    if (numberOfClosedWalls == 2) cellVertexMap.put(cells[row][column], new Vertex());
                     else if (numberOfClosedWalls == 3) cellVertexMap.put(cells[row][column], new Vertex(Vertex.Type.DEAD_END));
                     else if (numberOfClosedWalls == 1) cellVertexMap.put(cells[row][column], new Vertex(Vertex.Type.THREE_WAY_INTERSECTION));
                     else if (numberOfClosedWalls == 0) cellVertexMap.put(cells[row][column], new Vertex(Vertex.Type.FOUR_WAY_INTERSECTION));

@@ -19,15 +19,15 @@ import java.awt.*;
 public class MazeGUI {
     public static void main(String[] args) {
         try {
-            int size = 256;
+            int size = 32;
 
             Generator generator;
 //            generator = new RecursiveBacktrackerGenerator();
 //            generator = new AldousBroderGenerator();
 //            generator = new KruskalGenerator();
 //            generator = new PrimGenerator();
-            generator = new BoruvkaGenerator();
-//            generator = new WilsonGenerator();
+//            generator = new BoruvkaGenerator();
+            generator = new WilsonGenerator();
             Maze maze = generator.generateMaze(new Grid(size));
             MyMaze myMaze = new MyMaze(maze.getGrid()); // Constructs the maze object
             System.out.println(maze.getGrid());
@@ -40,7 +40,15 @@ public class MazeGUI {
             System.out.println(mazeGraph.getNumberOfFourWayIntersections() + " 4-way intersections");
             System.out.println(mazeGraph.getNumberOfThreeWayIntersections() + " 3-way intersections");
             System.out.println(mazeGraph.getStartEndPathLength() + " start-end path length");
-
+            System.out.println("=======================");
+            System.out.println("Maze difficulty sum: " +
+                    (mazeGraph.getStartEndPathCorridorDifficulty()
+                            + mazeGraph.getCorridorsDifficultySum()
+                            + mazeGraph.getLongestPathFromStartLength()
+                            + mazeGraph.getNumberOfDeadEnds()
+                            + mazeGraph.getNumberOfFourWayIntersections()
+                            + mazeGraph.getNumberOfThreeWayIntersections()
+                            + mazeGraph.getStartEndPathLength()));
 
 
             JFrame frame = new JFrame("Maze");
